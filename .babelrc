@@ -4,10 +4,7 @@
       "@babel/preset-env",
       {
         "targets": {
-          "browsers": [
-            "ios >= 9",
-            "android >= 4"
-          ]
+          "browsers": ["chrome > 80"]
         }
       }
     ]

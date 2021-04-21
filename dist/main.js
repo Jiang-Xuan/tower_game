@@ -1,1 +1,2100 @@
-!function(e){var t={};function i(n){if(t[n])return t[n].exports;var a=t[n]={i:n,l:!1,exports:{}};return e[n].call(a.exports,a,a.exports,i),a.l=!0,a.exports}i.m=e,i.c=t,i.d=function(e,t,n){i.o(e,t)||Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:n})},i.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},i.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return i.d(t,"a",t),t},i.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},i.p="",i(i.s=15)}([function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.moveDownMovement=t.tutorialMovement=t.lightningMovement=t.hookUpMovement=t.hookDownMovement=t.bgInitMovement=t.initialAngle=t.out=t.land=t.drop=t.beforeDrop=t.swing=t.rotateLeft=t.rotateRight=t.flightLayer=t.flightCount=t.ropeHeight=t.cloudSize=t.blockHeight=t.blockWidth=t.blockCount=t.bgLinearGradientOffset=t.lineInitialOffset=t.bgImgOffset=t.hookNormal=t.hookUp=t.hookDown=t.gameScore=t.perfectCount=t.failedCount=t.successCount=t.hardMode=t.gameUserOption=t.gameStartNow=void 0;t.gameStartNow="GAME_START_NOW";t.gameUserOption="GAME_USER_OPTION";t.hardMode="HARD_MODE";t.successCount="SUCCESS_COUNT";t.failedCount="FAILED_COUNT";t.perfectCount="PERFECT_COUNT";t.gameScore="GAME_SCORE";t.hookDown="HOOK_DOWN";t.hookUp="HOOK_UP";t.hookNormal="HOOK_NORMAL";t.bgImgOffset="BACKGROUND_IMG_OFFSET_HEIGHT";t.lineInitialOffset="LINE_INITIAL_OFFSET";t.bgLinearGradientOffset="BACKGROUND_LINEAR_GRADIENT_OFFSET_HEIGHT";t.blockCount="BLOCK_COUNT";t.blockWidth="BLOCK_WIDTH";t.blockHeight="BLOCK_HEIGHT";t.cloudSize="CLOUD_SIZE";t.ropeHeight="ROPE_HEIGHT";t.flightCount="FLIGHT_COUNT";t.flightLayer="FLIGHT_LAYER";t.rotateRight="ROTATE_RIGHT";t.rotateLeft="ROTATE_LEFT";t.swing="SWING";t.beforeDrop="BEFORE_DROP";t.drop="DROP";t.land="LAND";t.out="OUT";t.initialAngle="INITIAL_ANGLE";t.bgInitMovement="BG_INIT_MOVEMENT";t.hookDownMovement="HOOK_DOWN_MOVEMENT";t.hookUpMovement="HOOK_UP_MOVEMENT";t.lightningMovement="LIGHTNING_MOVEMENT";t.tutorialMovement="TUTORIAL_MOVEMENT";t.moveDownMovement="MOVE_DOWN_MOVEMENT"},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.drawYellowString=t.addScore=t.addFailedCount=t.addSuccessCount=t.touchEventHandler=t.getHookStatus=t.getLandBlockVelocity=t.getSwingBlockVelocity=t.getAngleBase=t.getMoveDownValue=t.checkMoveDown=void 0;var n=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));t.checkMoveDown=function(e){return e.checkTimeMovement(n.moveDownMovement)};t.getMoveDownValue=function(e,t){var i=t?t.pixelsPerFrame:e.pixelsPerFrame.bind(e),a=e.getVariable(n.successCount),r=2*e.getVariable(n.blockHeight);return i(a<=4?1.25*r:r)};t.getAngleBase=function(e){var t=e.getVariable(n.successCount),i=e.getVariable(n.gameScore),a=e.getVariable(n.gameUserOption).hookAngle;if(a)return a(t,i);if(e.getVariable(n.hardMode))return 90;switch(!0){case t<10:return 30;case t<20:return 60;default:return 80}};t.getSwingBlockVelocity=function(e,t){var i,a=e.getVariable(n.successCount),r=e.getVariable(n.gameScore),o=e.getVariable(n.gameUserOption).hookSpeed;if(o)return o(a,r);switch(!0){case a<1:i=0;break;case a<10:i=1;break;case a<20:i=.8;break;case a<30:i=.7;break;default:i=.74}return e.getVariable(n.hardMode)&&(i=1.1),Math.sin(t/(200/i))};t.getLandBlockVelocity=function(e,t){var i=e.getVariable(n.successCount),a=e.getVariable(n.gameScore),r=e.getVariable(n.gameUserOption).landBlockSpeed;if(r)return r(i,a);var o,s=e.width;switch(!0){case i<5:o=0;break;case i<13:o=.001;break;case i<23:o=.002;break;default:o=.003}return Math.cos(t/200)*o*s};var a=function(e){return e.checkTimeMovement(n.hookDownMovement)?n.hookDown:e.checkTimeMovement(n.hookUpMovement)?n.hookUp:n.hookNormal};t.getHookStatus=a;t.touchEventHandler=function(e){if(e.getVariable(n.gameStartNow)&&!(e.debug&&e.paused||a(e)!==n.hookNormal)){e.removeInstance("tutorial"),e.removeInstance("tutorial-arrow");var t=e.getInstance("block_".concat(e.getVariable(n.blockCount)));t&&t.status===n.swing&&(e.setTimeMovement(n.hookUpMovement,500),t.status=n.beforeDrop)}};t.addSuccessCount=function(e){var t=e.getVariable(n.gameUserOption).setGameSuccess,i=e.getVariable(n.successCount)+1;e.setVariable(n.successCount,i),e.getVariable(n.hardMode)&&e.setVariable(n.ropeHeight,e.height*e.utils.random(.35,.55)),t&&t(i)};t.addFailedCount=function(e){var t=e.getVariable(n.gameUserOption).setGameFailed,i=e.getVariable(n.failedCount)+1;e.setVariable(n.failedCount,i),e.setVariable(n.perfectCount,0),t&&t(i),i>=3&&(e.pauseAudio("bgm"),e.playAudio("game-over"),e.setVariable(n.gameStartNow,!1))};t.addScore=function(e,t){var i=e.getVariable(n.gameUserOption),a=i.setGameScore,r=i.successScore,o=i.perfectScore,s=e.getVariable(n.perfectCount,0),c=e.getVariable(n.gameScore),u=t?s+1:0,l=c+(r||25)+(o||25)*u;e.setVariable(n.gameScore,l),e.setVariable(n.perfectCount,u),a&&a(l)};t.drawYellowString=function(e,t){var i=t.string,n=t.size,a=t.x,r=t.y,o=t.textAlign,s=e.ctx,c=n,u=.1*c;s.save(),s.beginPath();var l=s.createLinearGradient(0,0,0,r);l.addColorStop(0,"#FAD961"),l.addColorStop(1,"#F76B1C"),s.fillStyle=l,s.lineWidth=u,s.strokeStyle="#FFF",s.textAlign=o||"center",s.font="".concat(c,"px ").concat("wenxue"),s.strokeText(i,a,r),s.fillText(i,a,r),s.restore()}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),Object.defineProperty(t,"Engine",{enumerable:!0,get:function(){return n.default}}),Object.defineProperty(t,"Instance",{enumerable:!0,get:function(){return a.default}});var n=r(i(14)),a=r(i(11));function r(e){return e&&e.__esModule?e:{default:e}}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.addFlight=t.flightPainter=t.flightAction=void 0;var n=i(2),a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));var r=function(e,t){var i=e.visible,n=e.ready,r=e.type;if(i){var o=t.getVariable(a.cloudSize);if(!n){var s=function(e,t){var i=e.width,n=e.height,r=e.utils.random,o=e.getVariable(a.cloudSize);return{bottomToTop:{x:i*r(.3,.7),y:n,vx:0,vy:.7*e.pixelsPerFrame(n)*-1},leftToRight:{x:-1*o,y:n*r(.3,.6),vx:.4*e.pixelsPerFrame(i),vy:.1*e.pixelsPerFrame(n)*-1},rightToLeft:{x:i,y:n*r(.2,.5),vx:.4*e.pixelsPerFrame(i)*-1,vy:.1*e.pixelsPerFrame(n)},rightTopToLeft:{x:i,y:0,vx:.6*e.pixelsPerFrame(i)*-1,vy:.5*e.pixelsPerFrame(n)}}[t]}(t,r);e.ready=!0,e.width=o,e.height=o,e.x=s.x,e.y=s.y,e.vx=s.vx,e.vy=s.vy}e.x+=e.vx,e.y+=e.vy,(e.y+o<0||e.y>t.height||e.x+o<0||e.x>t.width)&&(e.visible=!1)}};t.flightAction=r;var o=function(e,t){var i=t.ctx,n=t.getImg(e.imgName);i.drawImage(n,e.x,e.y,e.width,e.height)};t.flightPainter=o;t.addFlight=function(e,t,i){if(e.getVariable(a.flightCount)!==t){var s=new n.Instance({name:"flight_".concat(t),action:r,painter:o});s.imgName="f".concat(t),s.type=i,e.addInstance(s,a.flightLayer),e.setVariable(a.flightCount,t)}}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.blockPainter=t.blockAction=void 0;var n=i(1),a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));var r=function(e,t){e.status===a.rotateLeft?e.y-e.width>=t.height&&(e.visible=!1,e.status=a.out,(0,n.addFailedCount)(t)):e.y>=t.height&&(e.visible=!1,e.status=a.out,(0,n.addFailedCount)(t))};t.blockAction=function(e,t,i){var o=e,s=t.getVariable(a.ropeHeight);if(o.visible){o.ready||(o.ready=!0,o.status=a.swing,e.updateWidth(t.getVariable(a.blockWidth)),e.updateHeight(t.getVariable(a.blockHeight)),e.x=t.width/2,e.y=-1.5*s);var c=t.getInstance("line");switch(o.status){case a.swing:t.getTimeMovement(a.hookDownMovement,[[e.y,e.y+s]],function(t){e.y=t},{name:"block"}),function(e,t,i){var r=t.getVariable(a.ropeHeight);if(e.status===a.swing){var o=e,s=t.getVariable(a.initialAngle);o.angle=s*(0,n.getSwingBlockVelocity)(t,i),o.weightX=o.x+Math.sin(o.angle)*r,o.weightY=o.y+Math.cos(o.angle)*r}}(e,t,i);break;case a.beforeDrop:o.x=e.weightX-e.calWidth,o.y=e.weightY+.3*e.height,o.rotate=0,o.ay=t.pixelsPerFrame(3e-4*t.height),o.startDropTime=i,o.status=a.drop;break;case a.drop:var u=i-o.startDropTime;o.startDropTime=i,o.vy+=o.ay*u,o.y+=o.vy*u+.5*o.ay*Math.pow(u,2);var l=function(e,t){return e.y+e.height>=t.y?e.x<t.x-e.calWidth||e.x>t.collisionX+e.calWidth?1:e.x<t.x?2:e.x>t.collisionX?3:e.x>t.x+.8*e.calWidth&&e.x<t.x+1.2*e.calWidth?5:4:0}(e,c),d=c.y-e.height,h=function(e){e.originOutwardAngle=Math.atan(e.height/e.outwardOffset),e.originHypotenuse=Math.sqrt(Math.pow(e.height,2)+Math.pow(e.outwardOffset,2)),t.playAudio("rotate")};switch(l){case 1:r(e,t);break;case 2:o.status=a.rotateLeft,e.y=d,e.outwardOffset=c.x+e.calWidth-e.x,h(e);break;case 3:o.status=a.rotateRight,e.y=d,e.outwardOffset=c.collisionX+e.calWidth-e.x,h(e);break;case 4:case 5:o.status=a.land;var g=t.getVariable(a.successCount);(0,n.addSuccessCount)(t),t.setTimeMovement(a.moveDownMovement,500),10!==g&&15!==g||t.setTimeMovement(a.lightningMovement,150),e.y=d,c.y=d,c.x=o.x-o.calWidth,c.collisionX=c.x+o.width;var f=.3*o.width;(o.x>t.width-2*f||o.x<-f)&&t.setVariable(a.hardMode,!0),5===l?(e.perfect=!0,(0,n.addScore)(t,!0),t.playAudio("drop-perfect")):((0,n.addScore)(t),t.playAudio("drop"))}break;case a.land:t.getTimeMovement(a.moveDownMovement,[[e.y,e.y+(0,n.getMoveDownValue)(t,{pixelsPerFrame:function(e){return e/2}})]],function(i){e.visible&&(e.y=i,e.y>t.height&&(e.visible=!1))},{name:e.name}),e.x+=(0,n.getLandBlockVelocity)(t,i);break;case a.rotateLeft:case a.rotateRight:var v=o.status===a.rotateRight,m=t.pixelsPerFrame(4*Math.PI),p=v?e.rotate>1.3:e.rotate<-1.3,y=v?1:-1;if(p)e.rotate+=m/8*y,e.y+=t.pixelsPerFrame(.7*t.height),e.x+=t.pixelsPerFrame(.3*t.width)*y;else{var b=(e.calWidth-e.outwardOffset)/e.calWidth;b=b>.5?b:.5,e.rotate+=m*b*y;var w=e.originOutwardAngle+e.rotate,k=v?c.collisionX+e.calWidth:c.x+e.calWidth,O=c.y;e.x=k-Math.cos(w)*e.originHypotenuse,e.y=O-Math.sin(w)*e.originHypotenuse}r(e,t)}}};var o=function(e,t){var i=e.perfect,n=t.getImg(i?"block-perfect":"block");t.ctx.drawImage(n,e.x,e.y,e.width,e.height)};t.blockPainter=function(e,t){switch(e.status){case a.swing:!function(e,t){var i=t.getImg("blockRope");t.ctx.drawImage(i,e.weightX-e.calWidth,e.weightY,e.width,1.3*e.height);var n=e.weightX-e.calWidth;t.debugLineY(n)}(e,t);break;case a.drop:case a.land:o(e,t);break;case a.rotateLeft:case a.rotateRight:!function(e,t){var i=t.ctx;i.save(),i.translate(e.x,e.y),i.rotate(e.rotate),i.translate(-e.x,-e.y),o(e,t),i.restore()}(e,t)}}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.startAnimate=t.endAnimate=void 0;var n=i(2),a=i(4),r=i(1),o=i(3),s=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));t.endAnimate=function(e){if(e.getVariable(s.gameStartNow)){var t=e.getVariable(s.successCount,0),i=e.getVariable(s.failedCount),n=e.getVariable(s.gameScore,0),a=Number(t)>99?.1*e.width:0;(0,r.drawYellowString)(e,{string:"层",size:.06*e.width,x:.24*e.width+a,y:.12*e.width,textAlign:"left"}),(0,r.drawYellowString)(e,{string:t,size:.17*e.width,x:.22*e.width+a,y:.2*e.width,textAlign:"right"});var o=e.getImg("score"),c=o.width,u=o.height,l=.35*e.width,d=u*l/c;e.ctx.drawImage(o,.61*e.width,.038*e.width,l,d),(0,r.drawYellowString)(e,{string:n,size:.06*e.width,x:.9*e.width,y:.11*e.width,textAlign:"right"});for(var h=e.ctx,g=e.getImg("heart"),f=g.width,v=g.height,m=.08*e.width,p=v*m/f,y=1;y<=3;y+=1)h.save(),y<=i&&(h.globalAlpha=.2),h.drawImage(g,.66*e.width+(y-1)*m,.16*e.width,m,p),h.restore()}};t.startAnimate=function(e){if(e.getVariable(s.gameStartNow)){var t=e.getInstance("block_".concat(e.getVariable(s.blockCount)));if(!t||[s.land,s.out].indexOf(t.status)>-1){if((0,r.checkMoveDown)(e)&&(0,r.getMoveDownValue)(e))return;if(e.checkTimeMovement(s.hookUpMovement))return;var i=(0,r.getAngleBase)(e),c=Math.PI*e.utils.random(i,i+5)*e.utils.randomPositiveNegative()/180;e.setVariable(s.blockCount,e.getVariable(s.blockCount)+1),e.setVariable(s.initialAngle,c),e.setTimeMovement(s.hookDownMovement,500);var u=new n.Instance({name:"block_".concat(e.getVariable(s.blockCount)),action:a.blockAction,painter:a.blockPainter});e.addInstance(u)}switch(Number(e.getVariable(s.successCount,0))){case 2:(0,o.addFlight)(e,1,"leftToRight");break;case 6:(0,o.addFlight)(e,2,"rightToLeft");break;case 8:(0,o.addFlight)(e,3,"leftToRight");break;case 14:(0,o.addFlight)(e,4,"bottomToTop");break;case 18:(0,o.addFlight)(e,5,"bottomToTop");break;case 22:(0,o.addFlight)(e,6,"bottomToTop");break;case 25:(0,o.addFlight)(e,7,"rightTopToLeft")}}}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.tutorialPainter=t.tutorialAction=void 0;var n=i(1),a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));t.tutorialAction=function(e,t,i){var n=t.width,a=t.height,r=e.name;if(!e.ready){e.ready=!0;var o=.2*n;e.updateWidth(o),e.height=.46*o,e.x=t.calWidth-e.calWidth,e.y=.45*a,"tutorial"!==r&&(e.y+=1.2*e.height)}"tutorial"!==r&&(e.y+=Math.cos(i/200)*e.height*.01)};t.tutorialPainter=function(e,t){if(!t.checkTimeMovement(a.tutorialMovement)&&(0,n.getHookStatus)(t)===a.hookNormal){var i=t.ctx,r=e.name,o=t.getImg(r);i.drawImage(o,e.x,e.y,e.width,e.height)}}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.hookPainter=t.hookAction=void 0;var n=i(1),a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));t.hookAction=function(e,t,i){var r=t.getVariable(a.ropeHeight);e.ready||(e.x=t.width/2,e.y=-1.5*r,e.ready=!0),t.getTimeMovement(a.hookUpMovement,[[e.y,e.y-r]],function(t){e.y=t},{after:function(){e.y=-1.5*r}}),t.getTimeMovement(a.hookDownMovement,[[e.y,e.y+r]],function(t){e.y=t},{name:"hook"});var o=t.getVariable(a.initialAngle);e.angle=o*(0,n.getSwingBlockVelocity)(t,i),e.weightX=e.x+Math.sin(e.angle)*r,e.weightY=e.y+Math.cos(e.angle)*r};t.hookPainter=function(e,t){var i=t.ctx,n=t.getVariable(a.ropeHeight),r=.1*n,o=t.getImg("hook");i.save(),i.translate(e.x,e.y),i.rotate(2*Math.PI-e.angle),i.translate(-e.x,-e.y),t.ctx.drawImage(o,e.x-r/2,e.y,r,n+5),i.restore()}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.cloudPainter=t.cloudAction=void 0;var n=i(1),a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));var r=function(e){var t=e.count,i=function(e){return e[Math.floor(Math.random()*e.length)]};e.imgName=i(t>6?["c4","c5","c6","c7","c8"]:["c1","c2","c3"])};t.cloudAction=function(e,t){if(!e.ready){e.ready=!0,r(e),e.width=t.getVariable(a.cloudSize),e.height=t.getVariable(a.cloudSize);var i=t.width,o=t.height,s=[{x:.1*i,y:.66*-o},{x:.65*i,y:.33*-o},{x:.1*i,y:0},{x:.65*i,y:.33*o}][e.index-1];e.x=t.utils.random(s.x,1.2*s.x),e.originX=e.x,e.ax=t.pixelsPerFrame(e.width*t.utils.random(.05,.08)*t.utils.randomPositiveNegative()),e.y=t.utils.random(s.y,1.2*s.y)}e.x+=e.ax,(e.x>=e.originX+e.width||e.x<=e.originX-e.width)&&(e.ax*=-1),(0,n.checkMoveDown)(t)&&(e.y+=1.2*(0,n.getMoveDownValue)(t)),e.y>=t.height&&(e.y=.66*-t.height,e.count+=4,r(e))};t.cloudPainter=function(e,t){var i=t.ctx,n=t.getImg(e.imgName);i.drawImage(n,e.x,e.y,e.width,e.height)}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.linePainter=t.lineAction=void 0;var n=i(1),a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));t.lineAction=function(e,t,i){var r=e;r.ready||(r.y=t.getVariable(a.lineInitialOffset),r.ready=!0,r.collisionX=t.width-t.getVariable(a.blockWidth)),t.getTimeMovement(a.moveDownMovement,[[e.y,e.y+(0,n.getMoveDownValue)(t,{pixelsPerFrame:function(e){return e/2}})]],function(t){e.y=t},{name:"line"});var o=(0,n.getLandBlockVelocity)(t,i);e.x+=o,e.collisionX+=o};t.linePainter=function(e,t){var i=t.ctx;t.debug&&(i.save(),i.beginPath(),i.strokeStyle="red",i.moveTo(e.x,e.y),i.lineTo(e.collisionX,e.y),i.lineWidth=1,i.stroke(),i.restore())}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.background=t.backgroundLinearGradient=t.backgroundImg=void 0;var n=i(1),a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0));var r=function(e){var t=e.getImg("background"),i=t.width,r=t.height*e.width/i,o=e.getVariable(a.bgImgOffset,e.height-r);o>e.height||(e.getTimeMovement(a.moveDownMovement,[[o,o+(0,n.getMoveDownValue)(e,{pixelsPerFrame:function(e){return e/2}})]],function(e){o=e},{name:"background"}),e.getTimeMovement(a.bgInitMovement,[[o,o+r/4]],function(e){o=e}),e.setVariable(a.bgImgOffset,o),e.setVariable(a.lineInitialOffset,e.height-.394*r),e.ctx.drawImage(t,0,o,e.width,r))};t.backgroundImg=r;var o=function(e,t,i){var n=t+1>=e.length?e.length-1:t,a=e[n],r=e[n+1>=e.length-1?n:n+1],o=function(e){var t=a[e],n=r[e];return Math.round(t+(n-t)*i)};return"rgb(".concat(o(0),", ").concat(o(1),", ").concat(o(2),")")},s=function(e){var t=e.ctx.createLinearGradient(0,0,0,e.height),i=[[200,255,150],[105,230,240],[90,190,240],[85,100,190],[55,20,35],[75,25,35],[25,0,10]],r=e.getVariable(a.bgLinearGradientOffset,0);(0,n.checkMoveDown)(e)&&e.setVariable(a.bgLinearGradientOffset,r+1.5*(0,n.getMoveDownValue)(e));var s=parseInt(r/e.height,10),c=r%e.height/e.height,u=o(i,s,c),l=o(i,s+1,c);t.addColorStop(0,l),t.addColorStop(1,u),e.ctx.fillStyle=t,e.ctx.beginPath(),e.ctx.rect(0,0,e.width,e.height),e.ctx.fill();var d=function(){e.ctx.fillStyle="rgba(255, 255, 255, 0.7)",e.ctx.fillRect(0,0,e.width,e.height)};e.getTimeMovement(a.lightningMovement,[],function(){},{before:d,after:d})};t.backgroundLinearGradient=s;t.background=function(e){s(e),r(e)}},function(e,t,i){"use strict";function n(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=void 0;var a=function(){function e(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e);var i=t.name,n=t.painter,a=t.action;this.name=i,this.x=0,this.y=0,this.width=0,this.height=0,this.ax=0,this.ay=0,this.vx=0,this.vy=0,this.visible=!0,this.painter=n||null,this.action=a||null,this.ready=!1}var t,i,a;return t=e,(i=[{key:"paint",value:function(e){null!==this.painter&&this.visible&&this.painter(this,e)}},{key:"update",value:function(e,t){null!==this.action&&this.action(this,e,t)}},{key:"updateWidth",value:function(e){this.width=e,this.calWidth=e/2}},{key:"updateHeight",value:function(e){this.height=e,this.calHeight=e/2}}])&&n(t.prototype,i),a&&n(t,a),e}();t.default=a},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=void 0;var n={linear:function(e,t,i,n){return i*e/n+t},easeIn:function(e,t,i,n){return i*(e/=n)*e+t},easeOut:function(e,t,i,n){return-i*(e/=n)*(e-2)+t},easeInOut:function(e,t,i,n){return(e/=n/2)<1?i/2*e*e+t:-i/2*(--e*(e-2)-1)+t}};t.default=n},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.arraySwap=t.requestAnimationFrameTool=t.isTouchDevice=t.isFunction=t.randomPositiveNegative=t.random=t.getCurrentTime=void 0;var n=function(){return+new Date};t.getCurrentTime=n;t.random=function(e,t){return Math.random()*(t-e)+e};t.randomPositiveNegative=function(){return Math.random()<.5?-1:1};t.isFunction=function(e){return"function"==typeof e};t.isTouchDevice=function(){return"ontouchstart"in window||window.navigator.msMaxTouchPoints};var a,r=(a=1e3/60,window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(e){window.setTimeout(function(){var t=n();e(t);var i=n();a=1e3/60-(i-t)},a)});t.requestAnimationFrameTool=r;t.arraySwap=function(e,t,i){var n=e[i];e[i]=e[t],e[t]=n}},function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=void 0;var n,a=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(13)),r=(n=i(12))&&n.__esModule?n:{default:n};function o(e){return function(e){if(Array.isArray(e)){for(var t=0,i=new Array(e.length);t<e.length;t++)i[t]=e[t];return i}}(e)||function(e){if(Symbol.iterator in Object(e)||"[object Arguments]"===Object.prototype.toString.call(e))return Array.from(e)}(e)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance")}()}function s(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}var c=a.requestAnimationFrameTool,u=a.isFunction,l=a.isTouchDevice,d=function(){function e(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};if(function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),document.createElement("canvas").getContext){var i=t.canvasId,n=t.debug,r=t.width,o=t.height,s=t.highResolution,c=t.loadLimit,u=t.soundOn,d=r||window.innerWidth,h=o||window.innerHeight;this.canvas=document.getElementById(i),s&&(this.canvas.style.width="".concat(d,"px"),this.canvas.style.height="".concat(h,"px"),d*=2,h*=2),this.highResolution=s,this.canvas.width=d,this.canvas.height=h,this.width=this.canvas.width,this.height=this.canvas.height,this.calWidth=.5*this.width,this.calHeight=.5*this.height,this.debug=!!n,this.ctx=this.canvas.getContext("2d"),this.defaultLayer="default",this.layerArr=[this.defaultLayer],this.instancesObj={},this.instancesObj[this.defaultLayer]=[],this.utils=a,this.customVariable={};var g=this;this.isTouchDevice=l(),this.debugArr=[],this.assetsObj={image:{},audio:{}},this.assetsCount={image:0,audio:0},this.assetsErrorQueue=[],this.assetsErrorCount=0,this.loadLimit=c||3,this.soundOn=!!u,this.fps=0,this.lastTime=0,this.lastPausedAt=0,this.pausedTime=0,this.paused=!1,this.timeMovement={},this.timeMovementStartArr=[],this.timeMovementFinishArr=[],this.keyUpListeners={},this.keyDownListeners={},this.keyPressListeners={},this.startAnimate=function(){},this.paintUnderInstance=function(){},this.paintAboveInstance=function(){},this.endAnimate=function(){},this.touchStartListener=function(){},this.touchEndListener=function(){},this.touchMoveListener=function(){},document.addEventListener("keyup",function(e){g.keyListener(e,"keyup")},!1),document.addEventListener("keydown",function(e){g.keyListener(e,"keydown")},!1),document.addEventListener("keypress",function(e){g.keyListener(e,"keypress")},!1),this.isTouchDevice?(document.addEventListener("touchstart",function(e){g.touchStartListener(e)},!1),document.addEventListener("touchend",function(e){g.touchEndListener(e)},!1),document.addEventListener("touchmove",function(e){g.touchMoveListener(e)},!1)):(document.addEventListener("mousedown",function(e){g.touchStartListener(e)},!1),document.addEventListener("mouseup",function(e){g.touchEndListener(e)},!1),document.addEventListener("mousemove",function(e){g.touchMoveListener(e)},!1))}else window.alert("HTML5 Canvas is not supported in your browser.")}var t,i,n;return t=e,(i=[{key:"addAudio",value:function(e,t){var i=this,n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0;if(this.soundOn){n||(this.assetsCount.audio+=1);var a=new window.Audio;a.src=t,this.assetsObj.audio[e]=a,a.addEventListener("error",function(){i.assetsErrorQueue.push({name:e,src:t,retry:n+1,type:"audio"})},!1),a.load()}}},{key:"getAudio",value:function(e){return this.assetsObj.audio[e]}},{key:"playAudio",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]&&arguments[1];if(this.soundOn){var i=this.getAudio(e);if(i){if(i.play(),!t)return;i.addEventListener("ended",function(){i.currentTime=0,i.play()},!1)}}}},{key:"pauseAudio",value:function(e){var t=this.getAudio(e);t&&t.pause()}},{key:"setVariable",value:function(e,t){this.customVariable[e]=t}},{key:"getVariable",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,i=this.customVariable[e];return i||(null!==t?(this.setVariable(e,t),t):null)}},{key:"addImg",value:function(e,t){var i=this,n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0;n||(this.assetsCount.image+=1);var a=new window.Image;a.src=t,a.onload=function(){i.assetsObj.image[e]=a},a.onerror=function(){i.assetsErrorQueue.push({name:e,src:t,retry:n+1,type:"image"})}}},{key:"getImg",value:function(e){return this.assetsObj.image[e]}},{key:"animate",value:function(e){var t=this,i=e-this.pausedTime,n=this;this.paused?setTimeout(function(){t.animate.call(n,i)},100):(this.tick(i),this.clean(),this.startAnimate(this,i),this.paintUnderInstance(this),this.updateInstances(i),this.paintInstances(),this.paintAboveInstance(),this.endAnimate(this,i),this.tickTimeMovement(),this.debug&&this.showFps(),this.debug&&this.drawDebug(),c(function(e){t.animate.call(n,e)}))}},{key:"showFps",value:function(){this.ctx.save(),this.ctx.fillStyle="red",this.ctx.font="".concat(this.highResolution?32:16,"px Arial"),this.ctx.fillText("FPS: ".concat(this.fps.toFixed()),5,this.highResolution?40:20),this.ctx.restore()}},{key:"debugLineX",value:function(e){this.debugArr.push({type:"lineX",y:e})}},{key:"debugLineY",value:function(e){this.debugArr.push({type:"lineY",x:e})}},{key:"debugDot",value:function(e,t){this.debugArr.push({type:"dot",x:e,y:t})}},{key:"drawDebug",value:function(){var e=this;this.debugArr.forEach(function(t){var i=t.type,n=t.x,a=t.y;switch(i){case"dot":e.drawDebugDot(n,a);break;case"lineX":e.drawDebugLine(null,a);break;case"lineY":e.drawDebugLine(n,null)}})}},{key:"drawDebugLine",value:function(e,t){var i,n,a=[0,t],r=[this.width,t];e&&(a=[e,0],r=[e,this.height]),this.ctx.save(),this.ctx.strokeStyle="red",this.ctx.beginPath(),(i=this.ctx).moveTo.apply(i,o(a)),(n=this.ctx).lineTo.apply(n,o(r)),this.ctx.stroke(),this.ctx.restore()}},{key:"drawDebugDot",value:function(e,t){this.ctx.save(),this.ctx.fillStyle="red",this.ctx.beginPath(),this.ctx.arc(e,t,2,0,2*Math.PI,!0),this.ctx.fill(),this.ctx.fillStyle="white",this.ctx.beginPath(),this.ctx.arc(e,t,1,0,2*Math.PI,!0),this.ctx.fill(),this.ctx.restore()}},{key:"tick",value:function(e){this.updateFps(e),this.lastTime=e}},{key:"updateFps",value:function(e){0===this.lastTime?this.fps=60:this.fps=1e3/(e-this.lastTime)}},{key:"pixelsPerFrame",value:function(e){return e/this.fps}},{key:"tickTimeMovement",value:function(){var e=this;this.timeMovementStartArr.forEach(function(t){e.timeMovement[t].processing=!0}),this.timeMovementStartArr=[],this.timeMovementFinishArr.forEach(function(t){delete e.timeMovement[t]}),this.timeMovementFinishArr=[]}},{key:"getTimeMovement",value:function(e,t,i){var n=this,a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:{},o=a.before,s=a.after,c=r.default[a.easing||"linear"],u=a.name||"default",l=this.timeMovement[e];if(l){l.processing||("hook"===a.name&&console.log(t),this.timeMovementStartArr.push(e),l.store[u]=[],t.forEach(function(e){l.store[u].push({start:parseFloat(e[0]),end:parseFloat(e[1])})}),o&&o());var d=function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0],t=l.duration,a=t;if(!e){var r=n.utils.getCurrentTime(),o=l.startTime;a=r-o}var s=l.store[u].map(function(e){return c(a,e.start,e.end-e.start,t)});i.apply(n,s)};this.checkTimeMovement(e)?d():(this.timeMovementFinishArr.push(e),d(!0),s&&s())}}},{key:"checkTimeMovement",value:function(e){var t=this.timeMovement[e]||{};return this.utils.getCurrentTime()<=t.endTime}},{key:"setTimeMovement",value:function(e,t){var i=this.utils.getCurrentTime();this.timeMovement[e]={startTime:i,endTime:i+t,duration:t,store:{}}}},{key:"clean",value:function(){this.ctx.clearRect(0,0,this.width,this.height),this.debugArr=[]}},{key:"addLayer",value:function(e){this.layerArr.push(e),this.instancesObj[e]=[]}},{key:"removeLayer",value:function(e){this.layerArr=this.layerArr.filter(function(t){return t!==e}),delete this.instancesObj[e]}},{key:"swapLayer",value:function(e,t){this.utils.arraySwap(this.layerArr,e,t)}},{key:"addInstance",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.defaultLayer;this.instancesObj[t].push(e)}},{key:"getInstance",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.defaultLayer;return this.instancesObj[t].filter(function(t){return t.name===e})[0]}},{key:"removeInstance",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.defaultLayer;this.getInstance(e,t)&&(this.instancesObj[t]=this.instancesObj[t].filter(function(t){return t.name!==e}))}},{key:"updateInstances",value:function(e){var t=this;this.layerArr.forEach(function(i){t.instancesObj[i].forEach(function(i){i.update&&i.update(t,e)})})}},{key:"paintInstances",value:function(){var e=this;this.layerArr.forEach(function(t){e.instancesObj[t].forEach(function(t){t.paint&&t.paint(e)})})}},{key:"togglePaused",value:function(){var e=this.utils.getCurrentTime();this.paused=!this.paused,this.paused?this.lastPausedAt=e:this.pausedTime+=e-this.lastPausedAt}},{key:"addKeyUpListener",value:function(e,t){this.keyUpListeners[e]=t}},{key:"addKeyDownListener",value:function(e,t){this.keyDownListeners[e]=t}},{key:"addKeyPressListener",value:function(e,t){this.keyPressListeners[e]=t}},{key:"findKeyListener",value:function(e,t){return"keyup"===t?this.keyUpListeners[e]:"keydown"===t?this.keyDownListeners[e]:this.keyPressListeners[e]}},{key:"keyListener",value:function(e,t){var i;switch(e.keyCode){case 13:i="enter";break;case 32:i="space";break;case 37:i="leftArrow";break;case 39:i="rightArrow";break;case 38:i="upArrow";break;case 40:i="downArrow";break;default:i=e.keyCode}var n=this.findKeyListener(i,t);n&&n()}},{key:"load",value:function(e,t){var i=this,n=setInterval(function(){var a=i.assetsCount.image+i.assetsCount.audio,r=Object.keys(i.assetsObj.image).length+Object.keys(i.assetsObj.audio).length;t&&u(t)&&t({success:r,failed:i.assetsErrorCount,total:a}),i.assetsErrorQueue.length>0&&(i.assetsErrorQueue.forEach(function(e){var t=e.retry,n=e.name,a=e.src,r=e.type;t>=i.loadLimit?i.assetsErrorCount+=1:"image"===r?i.addImg(n,a,t):i.addAudio(n,a,t)}),i.assetsErrorQueue=[]),r===a&&(e&&u(e)?e():i.init(),clearInterval(n))},200)}},{key:"init",value:function(){var e=this,t=this;c(function(i){e.animate.call(t,i)})}}])&&s(t.prototype,i),n&&s(t,n),e}();t.default=d},function(e,t,i){"use strict";var n=i(2),a=i(1),r=i(10),o=i(9),s=i(8),c=i(7),u=i(6),l=function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){var n=Object.defineProperty&&Object.getOwnPropertyDescriptor?Object.getOwnPropertyDescriptor(e,i):{};n.get||n.set?Object.defineProperty(t,i,n):t[i]=e[i]}return t.default=e,t}(i(0)),d=i(5);window.TowerGame=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=e.width,i=e.height,h=e.canvasId,g=e.soundOn,f=new n.Engine({canvasId:h,highResolution:!0,width:t,height:i,soundOn:g}),v=function(e){return"./assets/".concat(e)};f.addImg("background",v("background.png")),f.addImg("hook",v("hook.png")),f.addImg("blockRope",v("block-rope.png")),f.addImg("block",v("block.png")),f.addImg("block-perfect",v("block-perfect.png"));for(var m=1;m<=8;m+=1)f.addImg("c".concat(m),v("c".concat(m,".png")));f.addLayer(l.flightLayer);for(var p=1;p<=7;p+=1)f.addImg("f".concat(p),v("f".concat(p,".png")));f.swapLayer(0,1),f.addImg("tutorial",v("tutorial.png")),f.addImg("tutorial-arrow",v("tutorial-arrow.png")),f.addImg("heart",v("heart.png")),f.addImg("score",v("score.png")),f.addAudio("drop-perfect",v("drop-perfect.mp3")),f.addAudio("drop",v("drop.mp3")),f.addAudio("game-over",v("game-over.mp3")),f.addAudio("rotate",v("rotate.mp3")),f.addAudio("bgm",v("bgm.mp3")),f.setVariable(l.blockWidth,.25*f.width),f.setVariable(l.blockHeight,.71*f.getVariable(l.blockWidth)),f.setVariable(l.cloudSize,.3*f.width),f.setVariable(l.ropeHeight,.4*f.height),f.setVariable(l.blockCount,0),f.setVariable(l.successCount,0),f.setVariable(l.failedCount,0),f.setVariable(l.gameScore,0),f.setVariable(l.hardMode,!1),f.setVariable(l.gameUserOption,e);for(var y=1;y<=4;y+=1){var b=new n.Instance({name:"cloud_".concat(y),action:s.cloudAction,painter:s.cloudPainter});b.index=y,b.count=5-y,f.addInstance(b)}var w=new n.Instance({name:"line",action:o.lineAction,painter:o.linePainter});f.addInstance(w);var k=new n.Instance({name:"hook",action:c.hookAction,painter:c.hookPainter});return f.addInstance(k),f.startAnimate=d.startAnimate,f.endAnimate=d.endAnimate,f.paintUnderInstance=r.background,f.addKeyDownListener("enter",function(){f.debug&&f.togglePaused()}),f.touchStartListener=function(){(0,a.touchEventHandler)(f)},f.playBgm=function(){f.playAudio("bgm",!0)},f.pauseBgm=function(){f.pauseAudio("bgm")},f.start=function(){var e=new n.Instance({name:"tutorial",action:u.tutorialAction,painter:u.tutorialPainter});f.addInstance(e);var t=new n.Instance({name:"tutorial-arrow",action:u.tutorialAction,painter:u.tutorialPainter});f.addInstance(t),f.setTimeMovement(l.bgInitMovement,500),f.setTimeMovement(l.tutorialMovement,500),f.setVariable(l.gameStartNow,!0)},f}}]);
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/cooljs/engine.js":
+/*!***************************************!*\
+  !*** ./node_modules/cooljs/engine.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Engine)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./node_modules/cooljs/utils.js");
+/* harmony import */ var _tween__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tween */ "./node_modules/cooljs/tween.js");
+
+
+
+const { requestAnimationFrameTool, isFunction, isTouchDevice } = _utils__WEBPACK_IMPORTED_MODULE_0__
+
+class Engine {
+  constructor(option = {}) {
+    if (!document.createElement('canvas').getContext) {
+      window.alert('HTML5 Canvas is not supported in your browser.') // eslint-disable-line
+      return
+    }
+    const {
+      canvasId, debug, width, height, highResolution, loadLimit, soundOn
+    } = option
+    let canvasWidth = width || window.innerWidth
+    let canvasHeight = height || window.innerHeight
+    this.canvas = document.getElementById(canvasId)
+    if (highResolution) {
+      this.canvas.style.width = `${canvasWidth}px`
+      this.canvas.style.height = `${canvasHeight}px`
+      canvasWidth *= 2
+      canvasHeight *= 2
+    }
+    this.highResolution = highResolution
+    this.canvas.width = canvasWidth
+    this.canvas.height = canvasHeight
+    this.width = this.canvas.width
+    this.height = this.canvas.height
+    this.calWidth = this.width * 0.5
+    this.calHeight = this.height * 0.5
+    // general
+    this.debug = !!debug
+    this.ctx = this.canvas.getContext('2d')
+    this.defaultLayer = 'default'
+    this.layerArr = [this.defaultLayer]
+    this.instancesObj = {}
+    this.instancesObj[this.defaultLayer] = []
+    this.instancesReactionArr = []
+    this.utils = _utils__WEBPACK_IMPORTED_MODULE_0__
+    this.customVariable = {}
+    const self = this
+    this.isTouchDevice = isTouchDevice()
+    this.debugArr = []
+    // assets
+    this.assetsObj = {
+      image: {},
+      audio: {}
+    }
+    this.assetsCount = {
+      image: 0,
+      audio: 0
+    }
+    this.assetsErrorQueue = []
+    this.assetsErrorCount = 0
+    this.loadLimit = loadLimit || 3
+    // audio
+    this.soundOn = !!soundOn
+    // time
+    this.fps = 0
+    this.lastTime = 0
+    this.lastPausedAt = 0
+    this.pausedTime = 0
+    this.paused = false
+    this.timeMovement = {}
+    this.timeMovementStartArr = []
+    this.timeMovementFinishArr = []
+    // keys
+    this.keyUpListeners = {}
+    this.keyDownListeners = {}
+    this.keyPressListeners = {}
+    // hooks
+    this.startAnimate = () => {
+    }
+    this.paintUnderInstance = () => {
+    }
+    this.paintAboveInstance = () => {
+    }
+    this.endAnimate = () => {
+    }
+    this.touchStartListener = () => {
+    }
+    this.touchEndListener = () => {
+    }
+    this.touchMoveListener = () => {
+    }
+    // global event listener
+    // key
+    document.addEventListener('keyup', (e) => {
+      self.keyListener(e, 'keyup')
+    }, false)
+    document.addEventListener('keydown', (e) => {
+      self.keyListener(e, 'keydown')
+    }, false)
+    document.addEventListener('keypress', (e) => {
+      self.keyListener(e, 'keypress')
+    }, false)
+    // touch
+    if (this.isTouchDevice) {
+      document.addEventListener('touchstart', (e) => {
+        self.touchStartListener(e)
+      }, false)
+      document.addEventListener('touchend', (e) => {
+        self.touchEndListener(e)
+      }, false)
+      document.addEventListener('touchmove', (e) => {
+        self.touchMoveListener(e)
+      }, false)
+    } else {
+      document.addEventListener('mousedown', (e) => {
+        self.touchStartListener(e)
+      }, false)
+      document.addEventListener('mouseup', (e) => {
+        self.touchEndListener(e)
+      }, false)
+      document.addEventListener('mousemove', (e) => {
+        self.touchMoveListener(e)
+      }, false)
+    }
+  }
+
+  triggerReaction(x, y) {
+    let calX = x
+    let calY = y
+    if (this.highResolution) {
+      calX *= 2
+      calY *= 2
+    }
+    this.instancesReactionArr.forEach((i) => {
+      if (!i.visible) return
+      if (calX >= i.x && calX<= i.x + i.width && calY >= i.y && calY<= i.y + i.height) {
+        i.trigger(i, this)
+      }
+    })
+  }
+
+  addAudio(name, src, retry = 0) {
+    if (!this.soundOn) return
+    if (!retry) this.assetsCount.audio += 1
+    const a = new window.Audio()
+    a.src = src
+    // a.addEventListener('canplaythrough', () => {
+    //   this.assetsObj.audio[name] = a
+    // }, false)
+    // bug sometime not trigger canplaythrough
+    this.assetsObj.audio[name] = a
+    a.addEventListener('error', () => {
+      this.assetsErrorQueue.push({
+        name,
+        src,
+        retry: retry + 1,
+        type: 'audio'
+      })
+    }, false)
+    a.load()
+  }
+
+  getAudio(name) {
+    return this.assetsObj.audio[name]
+  }
+
+  playAudio(name, loop = false) {
+    if (!this.soundOn) return
+    const audio = this.getAudio(name)
+    // const audio = document.getElementById(name)
+    if (audio) {
+      audio.play()
+      if (!loop) return
+      audio.addEventListener('ended', () => {
+        audio.currentTime = 0
+        audio.play()
+      }, false)
+    }
+  }
+
+  pauseAudio(name) {
+    const audio = this.getAudio(name)
+    if (audio) {
+      audio.pause()
+    }
+  }
+
+  setVariable(key, value) {
+    this.customVariable[key] = value
+  }
+
+  getVariable(key, defaultValue = null) {
+    const customVariable = this.customVariable[key]
+    if (customVariable) {
+      return customVariable
+    }
+    if (defaultValue !== null) {
+      this.setVariable(key, defaultValue)
+      return defaultValue
+    }
+    return null
+  }
+
+  addImg(name, src, retry = 0) {
+    if (!retry) this.assetsCount.image += 1
+    const i = new window.Image()
+    i.src = src
+    i.onload = () => {
+      this.assetsObj.image[name] = i
+    }
+    i.onerror = () => {
+      this.assetsErrorQueue.push({
+        name,
+        src,
+        retry: retry + 1,
+        type: 'image'
+      })
+    }
+  }
+
+  getImg(name) {
+    return this.assetsObj.image[name]
+  }
+
+  animate(time) {
+    const gameTime = time - this.pausedTime
+    const self = this
+    if (this.paused) {
+      setTimeout(() => {
+        this.animate.call(self, gameTime)
+      }, 100)
+      return
+    }
+    this.tick(gameTime)
+    this.clean()
+    this.startAnimate(this, gameTime)
+    this.paintUnderInstance(this)
+    this.updateInstances(gameTime)
+    this.paintInstances()
+    this.paintAboveInstance()
+    this.endAnimate(this, gameTime)
+    this.tickTimeMovement()
+    this.debug && this.showFps()
+    this.debug && this.drawDebug()
+    requestAnimationFrameTool((_time) => {
+      this.animate.call(self, _time)
+    })
+  }
+
+  showFps() {
+    this.ctx.save()
+    this.ctx.fillStyle = 'red'
+    this.ctx.font = `${this.highResolution ? 32 : 16}px Arial`
+    this.ctx.fillText(`FPS: ${this.fps.toFixed()}`, 5, this.highResolution ? 40 : 20)
+    this.ctx.restore()
+  }
+
+  debugLineX(y) {
+    this.debugArr.push({
+      type: 'lineX',
+      y
+    })
+  }
+
+  debugLineY(x) {
+    this.debugArr.push({
+      type: 'lineY',
+      x
+    })
+  }
+
+  debugDot(x, y) {
+    this.debugArr.push({
+      type: 'dot',
+      x,
+      y
+    })
+  }
+
+  drawDebug() {
+    this.debugArr.forEach((i) => {
+      const { type, x, y } = i
+      switch (type) {
+        case 'dot':
+          this.drawDebugDot(x, y)
+          break
+        case 'lineX':
+          this.drawDebugLine(null, y)
+          break
+        case 'lineY':
+          this.drawDebugLine(x, null)
+          break
+        default:
+          break
+      }
+    })
+    this.instancesReactionArr.forEach((i) => {
+      if (!i.visible) return
+      this.ctx.strokeStyle = 'red'
+      this.ctx.beginPath()
+      this.ctx.rect(i.x, i.y, i.width, i.height)
+      this.ctx.stroke()
+    })
+  }
+
+  drawDebugLine(x, y) {
+    let from = [0, y]
+    let to = [this.width, y]
+    if (x) {
+      from = [x, 0]
+      to = [x, this.height]
+    }
+    this.ctx.save()
+    this.ctx.strokeStyle = 'red'
+    this.ctx.beginPath()
+    this.ctx.moveTo(...from)
+    this.ctx.lineTo(...to)
+    this.ctx.stroke()
+    this.ctx.restore()
+  }
+
+  drawDebugDot(x, y) {
+    this.ctx.save()
+    this.ctx.fillStyle = 'red'
+    this.ctx.beginPath()
+    this.ctx.arc(x, y, 2, 0, 2 * Math.PI, true)
+    this.ctx.fill()
+    this.ctx.fillStyle = 'white'
+    this.ctx.beginPath()
+    this.ctx.arc(x, y, 1, 0, 2 * Math.PI, true)
+    this.ctx.fill()
+    this.ctx.restore()
+  }
+
+  tick(time) {
+    this.updateFps(time)
+    this.lastTime = time
+  }
+
+  updateFps(time) {
+    if (this.lastTime === 0) {
+      this.fps = 60
+    } else {
+      this.fps = 1000 / (time - this.lastTime)
+    }
+  }
+
+  pixelsPerFrame(velocity) {
+    return velocity / this.fps
+  }
+
+  tickTimeMovement() {
+    this.timeMovementStartArr.forEach((name) => {
+      this.timeMovement[name].processing = true
+    })
+    this.timeMovementStartArr = []
+    this.timeMovementFinishArr.forEach((name) => {
+      delete this.timeMovement[name]
+    })
+    this.timeMovementFinishArr = []
+  }
+
+  getTimeMovement(name, value, render, option = {}) {
+    const { before, after } = option
+    const timingFunc = _tween__WEBPACK_IMPORTED_MODULE_1__.default[option.easing || 'linear']
+    const movementInstanceName = option.name || 'default'
+    const movement = this.timeMovement[name]
+    if (!movement) {
+      return
+    }
+    if (!movement.processing) {
+      this.timeMovementStartArr.push(name)
+      movement.store[movementInstanceName] = []
+      value.forEach((v) => {
+        movement.store[movementInstanceName].push({
+          start: parseFloat(v[0]),
+          end: parseFloat(v[1])
+        })
+      })
+      before && before()
+    }
+    const processRender = (lastRender = false) => {
+      const { duration } = movement
+      let t = duration
+      if (!lastRender) {
+        const currentTime = this.utils.getCurrentTime()
+        const { startTime } = movement
+        t = currentTime - startTime
+      }
+      const values = movement.store[movementInstanceName]
+        .map(v => timingFunc(t, v.start, v.end - v.start, duration))
+      render.apply(this, values)
+    }
+    if (this.checkTimeMovement(name)) {
+      processRender()
+    } else {
+      this.timeMovementFinishArr.push(name)
+      processRender(true)
+      after && after()
+    }
+  }
+
+  checkTimeMovement(name) {
+    const movement = this.timeMovement[name] || {}
+    return this.utils.getCurrentTime() <= movement.endTime
+  }
+
+  setTimeMovement(name, duration) {
+    const currentTime = this.utils.getCurrentTime()
+    this.timeMovement[name] = {
+      startTime: currentTime,
+      endTime: currentTime + duration,
+      duration,
+      store: {}
+    }
+  }
+
+  clean() {
+    this.ctx.clearRect(0, 0, this.width, this.height)
+    this.debugArr = []
+  }
+
+  addLayer(layer) {
+    this.layerArr.push(layer)
+    this.instancesObj[layer] = []
+  }
+
+  removeLayer(layer) {
+    this.layerArr = this.layerArr.filter(i => i !== layer)
+    delete this.instancesObj[layer]
+  }
+
+  swapLayer(index1, index2) {
+    this.utils.arraySwap(this.layerArr, index1, index2)
+  }
+
+  addInstance(instance, layer = this.defaultLayer) {
+    this.instancesObj[layer].push(instance)
+    if (instance.trigger) this.instancesReactionArr.push(instance)
+  }
+
+  getInstance(name, layer = this.defaultLayer) {
+    return this.instancesObj[layer].filter(i => i.name === name)[0]
+  }
+
+  removeInstance(name, layer = this.defaultLayer) {
+    const instance = this.getInstance(name, layer)
+    if (instance) {
+      this.instancesObj[layer] = this.instancesObj[layer].filter(i => i.name !== name)
+      if (instance.trigger) {
+        this.instancesReactionArr = this.instancesReactionArr.filter(i => i.name !== name)
+      }
+    }
+  }
+
+  updateInstances(time) {
+    this.layerArr.forEach((l) => {
+      this.instancesObj[l].forEach((i) => {
+        i.update && i.update(this, time)
+      })
+    })
+  }
+
+  paintInstances() {
+    this.layerArr.forEach((l) => {
+      this.instancesObj[l].forEach((i) => {
+        i.paint && i.paint(this)
+      })
+    })
+  }
+
+  togglePaused() {
+    const now = this.utils.getCurrentTime()
+    this.paused = !this.paused
+    if (this.paused) {
+      this.lastPausedAt = now
+    } else {
+      this.pausedTime += (now - this.lastPausedAt)
+    }
+  }
+
+  addKeyUpListener(key, listener) {
+    this.keyUpListeners[key] = listener
+  }
+
+  addKeyDownListener(key, listener) {
+    this.keyDownListeners[key] = listener
+  }
+
+  addKeyPressListener(key, listener) {
+    this.keyPressListeners[key] = listener
+  }
+
+  findKeyListener(key, type) {
+    if (type === 'keyup') {
+      return this.keyUpListeners[key]
+    } else if (type === 'keydown') {
+      return this.keyDownListeners[key]
+    }
+    return this.keyPressListeners[key]
+  }
+
+  keyListener(e, type) {
+    let key
+    switch (e.keyCode) {
+      case 13:
+        key = 'enter'
+        break
+      case 32:
+        key = 'space'
+        break
+      case 37:
+        key = 'leftArrow'
+        break
+      case 39:
+        key = 'rightArrow'
+        break
+      case 38:
+        key = 'upArrow'
+        break
+      case 40:
+        key = 'downArrow'
+        break
+      default:
+        key = e.keyCode
+        break
+    }
+    const listener = this.findKeyListener(key, type)
+    if (listener) listener()
+  }
+
+
+  load(onload, loading) {
+    const id = setInterval(() => {
+      const assetsTotalCount = this.assetsCount.image + this.assetsCount.audio
+      const assetsLoadedCount = Object.keys(this.assetsObj.image).length
+        + Object.keys(this.assetsObj.audio).length
+      if (loading && isFunction(loading)) {
+        loading({
+          success: assetsLoadedCount,
+          failed: this.assetsErrorCount,
+          total: assetsTotalCount
+        })
+      }
+      if (this.assetsErrorQueue.length > 0) {
+        this.assetsErrorQueue.forEach((i) => {
+          const {
+            retry, name, src, type
+          } = i
+          if (retry >= this.loadLimit) {
+            this.assetsErrorCount += 1
+          } else if (type === 'image') {
+            this.addImg(name, src, retry)
+          } else {
+            this.addAudio(name, src, retry)
+          }
+        })
+        this.assetsErrorQueue = []
+      }
+      if (assetsLoadedCount === assetsTotalCount) {
+        if (onload && isFunction(onload)) {
+          onload()
+        } else {
+          this.init()
+        }
+        clearInterval(id)
+      }
+    }, 200)
+  }
+
+  init() {
+    const self = this
+    requestAnimationFrameTool((time) => {
+      this.animate.call(self, time)
+    })
+  }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/cooljs/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/cooljs/index.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Engine": () => (/* reexport safe */ _engine__WEBPACK_IMPORTED_MODULE_0__.default),
+/* harmony export */   "Instance": () => (/* reexport safe */ _instance__WEBPACK_IMPORTED_MODULE_1__.default)
+/* harmony export */ });
+/* harmony import */ var _engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./engine */ "./node_modules/cooljs/engine.js");
+/* harmony import */ var _instance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./instance */ "./node_modules/cooljs/instance.js");
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/cooljs/instance.js":
+/*!*****************************************!*\
+  !*** ./node_modules/cooljs/instance.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Instance)
+/* harmony export */ });
+class Instance {
+  constructor(option = {}) {
+    const { name, painter, action, trigger } = option
+    this.name = name
+    this.x = 0
+    this.y = 0
+    this.width = 0
+    this.height = 0
+    this.ax = 0
+    this.ay = 0
+    this.vx = 0
+    this.vy = 0
+    this.visible = true
+    this.painter = painter || null
+    this.action = action || null
+    this.trigger = trigger || null
+    this.ready = false
+  }
+
+  paint(engine) {
+    if (this.painter !== null && this.visible) {
+      this.painter(this, engine)
+    }
+  }
+
+  update(engine, time) {
+    if (this.action !== null) {
+      this.action(this, engine, time)
+    }
+  }
+
+  updateWidth(width) {
+    this.width = width
+    this.calWidth = width / 2
+  }
+
+  updateHeight(height) {
+    this.height = height
+    this.calHeight = height / 2
+  }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/cooljs/tween.js":
+/*!**************************************!*\
+  !*** ./node_modules/cooljs/tween.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* eslint-disable */
+const Tween = {
+  linear: function (t, b, c, d) {
+    return c * t / d + b;
+  },
+  easeIn: function (t, b, c, d) {
+    return c * (t /= d) * t + b;
+  },
+  easeOut: function (t, b, c, d) {
+    return -c * (t /= d) * (t - 2) + b;
+  },
+  easeInOut: function (t, b, c, d) {
+    if ((t /= d / 2) < 1) return c / 2 * t * t + b;
+    return -c / 2 * ((--t) * (t - 2) - 1) + b;
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Tween);
+
+
+/***/ }),
+
+/***/ "./node_modules/cooljs/utils.js":
+/*!**************************************!*\
+  !*** ./node_modules/cooljs/utils.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getCurrentTime": () => (/* binding */ getCurrentTime),
+/* harmony export */   "random": () => (/* binding */ random),
+/* harmony export */   "randomPositiveNegative": () => (/* binding */ randomPositiveNegative),
+/* harmony export */   "isFunction": () => (/* binding */ isFunction),
+/* harmony export */   "isTouchDevice": () => (/* binding */ isTouchDevice),
+/* harmony export */   "requestAnimationFrameTool": () => (/* binding */ requestAnimationFrameTool),
+/* harmony export */   "arraySwap": () => (/* binding */ arraySwap)
+/* harmony export */ });
+const getCurrentTime = () => (performance.now())
+
+const random = (min, max) => (Math.random() * (max - min)) + min
+
+const randomPositiveNegative = () => (Math.random() < 0.5 ? -1 : 1)
+
+const isFunction = f => (typeof f === 'function')
+
+const isTouchDevice = () => ('ontouchstart' in window || window.navigator.msMaxTouchPoints)
+
+const requestAnimationFrameTool = ((() => {
+  const FPS = 60
+  let timeout = 1000 / FPS
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    ((callBack) => {
+      window.setTimeout(() => {
+        const start = getCurrentTime()
+        callBack(start)
+        const end = getCurrentTime()
+        timeout = (1000 / FPS) - (end - start)
+      }, timeout)
+    })
+}))()
+
+const arraySwap = (array, index1, index2) => {
+  const temp = array[index2]
+  array[index2] = array[index1]
+  array[index1] = temp
+}
+
+
+/***/ }),
+
+/***/ "./src/animateFuncs.js":
+/*!*****************************!*\
+  !*** ./src/animateFuncs.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "endAnimate": () => (/* binding */ endAnimate),
+/* harmony export */   "startAnimate": () => (/* binding */ startAnimate)
+/* harmony export */ });
+/* harmony import */ var cooljs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cooljs */ "./node_modules/cooljs/index.js");
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./block */ "./src/block.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _flight__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./flight */ "./src/flight.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+
+
+
+const endAnimate = (engine) => {
+  const gameStartNow = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.gameStartNow)
+  if (!gameStartNow) return
+  const successCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.successCount, 0)
+  const failedCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.failedCount)
+  const gameScore = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.gameScore, 0)
+  const threeFiguresOffset = Number(successCount) > 99 ? engine.width * 0.1 : 0
+
+  ;(0,_utils__WEBPACK_IMPORTED_MODULE_2__.drawYellowString)(engine, {
+    string: '层',
+    size: engine.width * 0.06,
+    x: (engine.width * 0.24) + threeFiguresOffset,
+    y: engine.width * 0.12,
+    textAlign: 'left'
+  })
+  ;(0,_utils__WEBPACK_IMPORTED_MODULE_2__.drawYellowString)(engine, {
+    string: successCount,
+    size: engine.width * 0.17,
+    x: (engine.width * 0.22) + threeFiguresOffset,
+    y: engine.width * 0.2,
+    textAlign: 'right'
+  })
+  const score = engine.getImg('score')
+  const scoreWidth = score.width
+  const scoreHeight = score.height
+  const zoomedWidth = engine.width * 0.35
+  const zoomedHeight = (scoreHeight * zoomedWidth) / scoreWidth
+  engine.ctx.drawImage(
+    score,
+    engine.width * 0.61,
+    engine.width * 0.038,
+    zoomedWidth,
+    zoomedHeight
+  )
+  ;(0,_utils__WEBPACK_IMPORTED_MODULE_2__.drawYellowString)(engine, {
+    string: gameScore,
+    size: engine.width * 0.06,
+    x: engine.width * 0.9,
+    y: engine.width * 0.11,
+    textAlign: 'right'
+  })
+  const { ctx } = engine
+  const heart = engine.getImg('heart')
+  const heartWidth = heart.width
+  const heartHeight = heart.height
+  const zoomedHeartWidth = engine.width * 0.08
+  const zoomedHeartHeight = (heartHeight * zoomedHeartWidth) / heartWidth
+  for (let i = 1; i <= 3; i += 1) {
+    ctx.save()
+    if (i <= failedCount) {
+      ctx.globalAlpha = 0.2
+    }
+    ctx.drawImage(
+      heart,
+      (engine.width * 0.66) + ((i - 1) * zoomedHeartWidth),
+      engine.width * 0.16,
+      zoomedHeartWidth,
+      zoomedHeartHeight
+    )
+    ctx.restore()
+  }
+}
+
+const startAnimate = (engine) => {
+  const gameStartNow = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.gameStartNow)
+  if (!gameStartNow) return
+  const lastBlock = engine.getInstance(`block_${engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.blockCount)}`)
+  if (!lastBlock || [_constant__WEBPACK_IMPORTED_MODULE_4__.land, _constant__WEBPACK_IMPORTED_MODULE_4__.out].indexOf(lastBlock.status) > -1) {
+    if ((0,_utils__WEBPACK_IMPORTED_MODULE_2__.checkMoveDown)(engine) && (0,_utils__WEBPACK_IMPORTED_MODULE_2__.getMoveDownValue)(engine)) return
+    if (engine.checkTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_4__.hookUpMovement)) return
+    const angleBase = (0,_utils__WEBPACK_IMPORTED_MODULE_2__.getAngleBase)(engine)
+    const initialAngle = (Math.PI
+        * engine.utils.random(angleBase, angleBase + 5)
+        * engine.utils.randomPositiveNegative()
+    ) / 180
+    engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.blockCount, engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.blockCount) + 1)
+    engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.initialAngle, initialAngle)
+    engine.setTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_4__.hookDownMovement, 500)
+    const block = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Instance({
+      name: `block_${engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.blockCount)}`,
+      action: _block__WEBPACK_IMPORTED_MODULE_1__.blockAction,
+      painter: _block__WEBPACK_IMPORTED_MODULE_1__.blockPainter
+    })
+    engine.addInstance(block)
+  }
+  const successCount = Number(engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_4__.successCount, 0))
+  switch (successCount) {
+    case 2:
+      ;(0,_flight__WEBPACK_IMPORTED_MODULE_3__.addFlight)(engine, 1, 'leftToRight')
+      break
+    case 6:
+      ;(0,_flight__WEBPACK_IMPORTED_MODULE_3__.addFlight)(engine, 2, 'rightToLeft')
+      break
+    case 8:
+      ;(0,_flight__WEBPACK_IMPORTED_MODULE_3__.addFlight)(engine, 3, 'leftToRight')
+      break
+    case 14:
+      ;(0,_flight__WEBPACK_IMPORTED_MODULE_3__.addFlight)(engine, 4, 'bottomToTop')
+      break
+    case 18:
+      ;(0,_flight__WEBPACK_IMPORTED_MODULE_3__.addFlight)(engine, 5, 'bottomToTop')
+      break
+    case 22:
+      ;(0,_flight__WEBPACK_IMPORTED_MODULE_3__.addFlight)(engine, 6, 'bottomToTop')
+      break
+    case 25:
+      ;(0,_flight__WEBPACK_IMPORTED_MODULE_3__.addFlight)(engine, 7, 'rightTopToLeft')
+      break
+    default:
+      break
+  }
+}
+
+
+
+/***/ }),
+
+/***/ "./src/background.js":
+/*!***************************!*\
+  !*** ./src/background.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "backgroundImg": () => (/* binding */ backgroundImg),
+/* harmony export */   "backgroundLinearGradient": () => (/* binding */ backgroundLinearGradient),
+/* harmony export */   "background": () => (/* binding */ background)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+const backgroundImg = (engine) => {
+  const bg = engine.getImg('background')
+  const bgWidth = bg.width
+  const bgHeight = bg.height
+  const zoomedHeight = (bgHeight * engine.width) / bgWidth
+  let offsetHeight = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.bgImgOffset, engine.height - zoomedHeight)
+  if (offsetHeight > engine.height) {
+    return
+  }
+  engine.getTimeMovement(
+    _constant__WEBPACK_IMPORTED_MODULE_1__.moveDownMovement,
+    [[offsetHeight, offsetHeight + ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.getMoveDownValue)(engine, { pixelsPerFrame: s => s / 2 }))]],
+    (value) => {
+      offsetHeight = value
+    },
+    {
+      name: 'background'
+    }
+  )
+  engine.getTimeMovement(
+    _constant__WEBPACK_IMPORTED_MODULE_1__.bgInitMovement,
+    [[offsetHeight, offsetHeight + (zoomedHeight / 4)]],
+    (value) => {
+      offsetHeight = value
+    }
+  )
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.bgImgOffset, offsetHeight)
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.lineInitialOffset, engine.height - (zoomedHeight * 0.394))
+  engine.ctx.drawImage(
+    bg,
+    0, offsetHeight,
+    engine.width, zoomedHeight
+  )
+}
+
+const getLinearGradientColorRgb = (colorArr, colorIndex, proportion) => {
+  const currentIndex = colorIndex + 1 >= colorArr.length ? colorArr.length - 1 : colorIndex
+  const colorCurrent = colorArr[currentIndex]
+  const nextIndex = currentIndex + 1 >= colorArr.length - 1 ? currentIndex : currentIndex + 1
+  const colorNext = colorArr[nextIndex]
+  const calRgbValue = (index) => {
+    const current = colorCurrent[index]
+    const next = colorNext[index]
+    return Math.round(current + ((next - current) * proportion))
+  }
+  return `rgb(${calRgbValue(0)}, ${calRgbValue(1)}, ${calRgbValue(2)})`
+}
+
+const backgroundLinearGradient = (engine) => {
+  const grad = engine.ctx.createLinearGradient(0, 0, 0, engine.height)
+  const colorArr = [
+    [200, 255, 150],
+    [105, 230, 240],
+    [90, 190, 240],
+    [85, 100, 190],
+    [55, 20, 35],
+    [75, 25, 35],
+    [25, 0, 10]
+  ]
+  const offsetHeight = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.bgLinearGradientOffset, 0)
+  if ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.checkMoveDown)(engine)) {
+    engine.setVariable(
+      _constant__WEBPACK_IMPORTED_MODULE_1__.bgLinearGradientOffset
+      , offsetHeight + ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.getMoveDownValue)(engine) * 1.5)
+    )
+  }
+  const colorIndex = parseInt(offsetHeight / engine.height, 10)
+  const calOffsetHeight = offsetHeight % engine.height
+  const proportion = calOffsetHeight / engine.height
+  const colorBase = getLinearGradientColorRgb(colorArr, colorIndex, proportion)
+  const colorTop = getLinearGradientColorRgb(colorArr, colorIndex + 1, proportion)
+  grad.addColorStop(0, colorTop)
+  grad.addColorStop(1, colorBase)
+  engine.ctx.fillStyle = grad
+  engine.ctx.beginPath()
+  engine.ctx.rect(0, 0, engine.width, engine.height)
+  engine.ctx.fill()
+
+  // lightning
+  const lightning = () => {
+    engine.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
+    engine.ctx.fillRect(0, 0, engine.width, engine.height)
+  }
+  engine.getTimeMovement(
+    _constant__WEBPACK_IMPORTED_MODULE_1__.lightningMovement, [], () => {},
+    {
+      before: lightning,
+      after: lightning
+    }
+  )
+}
+
+const background = (engine) => {
+  backgroundLinearGradient(engine)
+  backgroundImg(engine)
+}
+
+
+
+/***/ }),
+
+/***/ "./src/block.js":
+/*!**********************!*\
+  !*** ./src/block.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "blockAction": () => (/* binding */ blockAction),
+/* harmony export */   "blockPainter": () => (/* binding */ blockPainter)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+const checkCollision = (block, line) => {
+  // 0 goon 1 drop 2 rotate left 3 rotate right 4 ok 5 perfect
+  if (block.y + block.height >= line.y) {
+    if (block.x < line.x - block.calWidth || block.x > line.collisionX + block.calWidth) {
+      return 1
+    }
+    if (block.x < line.x) {
+      return 2
+    }
+    if (block.x > line.collisionX) {
+      return 3
+    }
+    if (block.x > line.x + (block.calWidth * 0.8) && block.x < line.x + (block.calWidth * 1.2)) {
+      // -10% +10%
+      return 5
+    }
+    return 4
+  }
+  return 0
+}
+const swing = (instance, engine, time) => {
+  const ropeHeight = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.ropeHeight)
+  if (instance.status !== _constant__WEBPACK_IMPORTED_MODULE_1__.swing) return
+  const i = instance
+  const initialAngle = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.initialAngle)
+  i.angle = initialAngle *
+    (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getSwingBlockVelocity)(engine, time)
+  i.weightX = i.x +
+    (Math.sin(i.angle) * ropeHeight)
+  i.weightY = i.y +
+    (Math.cos(i.angle) * ropeHeight)
+}
+
+const checkBlockOut = (instance, engine) => {
+  if (instance.status === _constant__WEBPACK_IMPORTED_MODULE_1__.rotateLeft) {
+    // 左转 要等右上角消失才算消失
+    if (instance.y - instance.width >= engine.height) {
+      instance.visible = false
+      instance.status = _constant__WEBPACK_IMPORTED_MODULE_1__.out
+      ;(0,_utils__WEBPACK_IMPORTED_MODULE_0__.addFailedCount)(engine)
+    }
+  } else if (instance.y >= engine.height) {
+    instance.visible = false
+    instance.status = _constant__WEBPACK_IMPORTED_MODULE_1__.out
+    ;(0,_utils__WEBPACK_IMPORTED_MODULE_0__.addFailedCount)(engine)
+  }
+}
+
+const blockAction = (instance, engine, time) => {
+  const i = instance
+  const ropeHeight = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.ropeHeight)
+  if (!i.visible) {
+    return
+  }
+  if (!i.ready) {
+    i.ready = true
+    i.status = _constant__WEBPACK_IMPORTED_MODULE_1__.swing
+    instance.updateWidth(engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.blockWidth))
+    instance.updateHeight(engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.blockHeight))
+    instance.x = engine.width / 2
+    instance.y = ropeHeight * -1.5
+  }
+  const line = engine.getInstance('line')
+  switch (i.status) {
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.swing:
+      engine.getTimeMovement(
+        _constant__WEBPACK_IMPORTED_MODULE_1__.hookDownMovement,
+        [[instance.y, instance.y + ropeHeight]],
+        (value) => {
+          instance.y = value
+        },
+        {
+          name: 'block'
+        }
+      )
+      swing(instance, engine, time)
+      break
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.beforeDrop:
+      i.x = instance.weightX - instance.calWidth
+      i.y = instance.weightY + (0.3 * instance.height) // add rope height
+      i.rotate = 0
+      i.ay = engine.pixelsPerFrame(0.0003 * engine.height) // acceleration of gravity
+      i.startDropTime = time
+      i.status = _constant__WEBPACK_IMPORTED_MODULE_1__.drop
+      break
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.drop:
+      const deltaTime = time - i.startDropTime
+      i.startDropTime = time
+      i.vy += i.ay * deltaTime
+      i.y += (i.vy * deltaTime) + (0.5 * i.ay * (deltaTime ** 2))
+      const collision = checkCollision(instance, line)
+      const blockY = line.y - instance.height
+      const calRotate = (ins) => {
+        ins.originOutwardAngle = Math.atan(ins.height / ins.outwardOffset)
+        ins.originHypotenuse = Math.sqrt((ins.height ** 2)
+          + (ins.outwardOffset ** 2))
+        engine.playAudio('rotate')
+      }
+      switch (collision) {
+        case 1:
+          checkBlockOut(instance, engine)
+          break
+        case 2:
+          i.status = _constant__WEBPACK_IMPORTED_MODULE_1__.rotateLeft
+          instance.y = blockY
+          instance.outwardOffset = (line.x + instance.calWidth) - instance.x
+          calRotate(instance)
+          break
+        case 3:
+          i.status = _constant__WEBPACK_IMPORTED_MODULE_1__.rotateRight
+          instance.y = blockY
+          instance.outwardOffset = (line.collisionX + instance.calWidth) - instance.x
+          calRotate(instance)
+          break
+        case 4:
+        case 5:
+          i.status = _constant__WEBPACK_IMPORTED_MODULE_1__.land
+          const lastSuccessCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.successCount)
+          ;(0,_utils__WEBPACK_IMPORTED_MODULE_0__.addSuccessCount)(engine)
+          engine.setTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_1__.moveDownMovement, 500)
+          if (lastSuccessCount === 10 || lastSuccessCount === 15) {
+            engine.setTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_1__.lightningMovement, 150)
+          }
+          instance.y = blockY
+          line.y = blockY
+          line.x = i.x - i.calWidth
+          line.collisionX = line.x + i.width
+          // 作弊检测 超出左边或右边1／3
+          const cheatWidth = i.width * 0.3
+          if (i.x > engine.width - (cheatWidth * 2)
+            || i.x < -cheatWidth) {
+            engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.hardMode, true)
+          }
+          if (collision === 5) {
+            instance.perfect = true
+            ;(0,_utils__WEBPACK_IMPORTED_MODULE_0__.addScore)(engine, true)
+            engine.playAudio('drop-perfect')
+          } else {
+            (0,_utils__WEBPACK_IMPORTED_MODULE_0__.addScore)(engine)
+            engine.playAudio('drop')
+          }
+          break
+        default:
+          break
+      }
+      break
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.land:
+      engine.getTimeMovement(
+        _constant__WEBPACK_IMPORTED_MODULE_1__.moveDownMovement,
+        [[instance.y, instance.y + ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.getMoveDownValue)(engine, { pixelsPerFrame: s => s / 2 }))]],
+        (value) => {
+          if (!instance.visible) return
+          instance.y = value
+          if (instance.y > engine.height) {
+            instance.visible = false
+          }
+        },
+        {
+          name: instance.name
+        }
+      )
+      instance.x += (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getLandBlockVelocity)(engine, time)
+      break
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.rotateLeft:
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.rotateRight:
+      const isRight = i.status === _constant__WEBPACK_IMPORTED_MODULE_1__.rotateRight
+      const rotateSpeed = engine.pixelsPerFrame(Math.PI * 4)
+      const isShouldFall = isRight ? instance.rotate > 1.3 : instance.rotate < -1.3// 75度
+      const leftFix = isRight ? 1 : -1
+      if (isShouldFall) {
+        instance.rotate += (rotateSpeed / 8) * leftFix
+        instance.y += engine.pixelsPerFrame(engine.height * 0.7)
+        instance.x += engine.pixelsPerFrame(engine.width * 0.3) * leftFix
+      } else {
+        let rotateRatio = (instance.calWidth - instance.outwardOffset)
+          / instance.calWidth
+        rotateRatio = rotateRatio > 0.5 ? rotateRatio : 0.5
+        instance.rotate += rotateSpeed * rotateRatio * leftFix
+        const angle = instance.originOutwardAngle + instance.rotate
+        const rotateAxisX = isRight ? line.collisionX + instance.calWidth
+          : line.x + instance.calWidth
+        const rotateAxisY = line.y
+        instance.x = rotateAxisX -
+          (Math.cos(angle) * instance.originHypotenuse)
+        instance.y = rotateAxisY -
+          (Math.sin(angle) * instance.originHypotenuse)
+      }
+      checkBlockOut(instance, engine)
+      break
+    default:
+      break
+  }
+}
+
+const drawSwingBlock = (instance, engine) => {
+  const bl = engine.getImg('blockRope')
+  engine.ctx.drawImage(
+    bl, instance.weightX - instance.calWidth
+    , instance.weightY
+    , instance.width, instance.height * 1.3
+  )
+  const leftX = instance.weightX - instance.calWidth
+  engine.debugLineY(leftX)
+}
+
+const drawBlock = (instance, engine) => {
+  const { perfect } = instance
+  const bl = engine.getImg(perfect ? 'block-perfect' : 'block')
+  engine.ctx.drawImage(bl, instance.x, instance.y, instance.width, instance.height)
+}
+
+const drawRotatedBlock = (instance, engine) => {
+  const { ctx } = engine
+  ctx.save()
+  ctx.translate(instance.x, instance.y)
+  ctx.rotate(instance.rotate)
+  ctx.translate(-instance.x, -instance.y)
+  drawBlock(instance, engine)
+  ctx.restore()
+}
+
+const blockPainter = (instance, engine) => {
+  const { status } = instance
+  switch (status) {
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.swing:
+      drawSwingBlock(instance, engine)
+      break
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.drop:
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.land:
+      drawBlock(instance, engine)
+      break
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.rotateLeft:
+    case _constant__WEBPACK_IMPORTED_MODULE_1__.rotateRight:
+      drawRotatedBlock(instance, engine)
+      break
+    default:
+      break
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/cloud.js":
+/*!**********************!*\
+  !*** ./src/cloud.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "cloudAction": () => (/* binding */ cloudAction),
+/* harmony export */   "cloudPainter": () => (/* binding */ cloudPainter)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+const randomCloudImg = (instance) => {
+  const { count } = instance
+  const clouds = ['c1', 'c2', 'c3']
+  const stones = ['c4', 'c5', 'c6', 'c7', 'c8']
+  const randomImg = array => (array[Math.floor(Math.random() * array.length)])
+  instance.imgName = count > 6 ? randomImg(stones) : randomImg(clouds)
+}
+
+const cloudAction = (instance, engine) => {
+  if (!instance.ready) {
+    instance.ready = true
+    randomCloudImg(instance)
+    instance.width = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.cloudSize)
+    instance.height = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.cloudSize)
+    const engineW = engine.width
+    const engineH = engine.height
+    const positionArr = [
+      { x: engineW * 0.1, y: -engineH * 0.66 },
+      { x: engineW * 0.65, y: -engineH * 0.33 },
+      { x: engineW * 0.1, y: 0 },
+      { x: engineW * 0.65, y: engineH * 0.33 }
+    ]
+    const position = positionArr[instance.index - 1]
+    instance.x = engine.utils.random(position.x, (position.x * 1.2))
+    instance.originX = instance.x
+    instance.ax = engine.pixelsPerFrame(instance.width * engine.utils.random(0.05, 0.08)
+      * engine.utils.randomPositiveNegative())
+    instance.y = engine.utils.random(position.y, (position.y * 1.2))
+  }
+  instance.x += instance.ax
+  if (instance.x >= instance.originX + instance.width
+    || instance.x <= instance.originX - instance.width) {
+    instance.ax *= -1
+  }
+  if ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.checkMoveDown)(engine)) {
+    instance.y += (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getMoveDownValue)(engine) * 1.2
+  }
+  if (instance.y >= engine.height) {
+    instance.y = -engine.height * 0.66
+    instance.count += 4
+    randomCloudImg(instance)
+  }
+}
+
+const cloudPainter = (instance, engine) => {
+  const { ctx } = engine
+  const cloud = engine.getImg(instance.imgName)
+  ctx.drawImage(cloud, instance.x, instance.y, instance.width, instance.height)
+}
+
+
+
+/***/ }),
+
+/***/ "./src/constant.js":
+/*!*************************!*\
+  !*** ./src/constant.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "gameStartNow": () => (/* binding */ gameStartNow),
+/* harmony export */   "gameUserOption": () => (/* binding */ gameUserOption),
+/* harmony export */   "hardMode": () => (/* binding */ hardMode),
+/* harmony export */   "successCount": () => (/* binding */ successCount),
+/* harmony export */   "failedCount": () => (/* binding */ failedCount),
+/* harmony export */   "perfectCount": () => (/* binding */ perfectCount),
+/* harmony export */   "gameScore": () => (/* binding */ gameScore),
+/* harmony export */   "hookDown": () => (/* binding */ hookDown),
+/* harmony export */   "hookUp": () => (/* binding */ hookUp),
+/* harmony export */   "hookNormal": () => (/* binding */ hookNormal),
+/* harmony export */   "bgImgOffset": () => (/* binding */ bgImgOffset),
+/* harmony export */   "lineInitialOffset": () => (/* binding */ lineInitialOffset),
+/* harmony export */   "bgLinearGradientOffset": () => (/* binding */ bgLinearGradientOffset),
+/* harmony export */   "blockCount": () => (/* binding */ blockCount),
+/* harmony export */   "blockWidth": () => (/* binding */ blockWidth),
+/* harmony export */   "blockHeight": () => (/* binding */ blockHeight),
+/* harmony export */   "cloudSize": () => (/* binding */ cloudSize),
+/* harmony export */   "ropeHeight": () => (/* binding */ ropeHeight),
+/* harmony export */   "flightCount": () => (/* binding */ flightCount),
+/* harmony export */   "flightLayer": () => (/* binding */ flightLayer),
+/* harmony export */   "rotateRight": () => (/* binding */ rotateRight),
+/* harmony export */   "rotateLeft": () => (/* binding */ rotateLeft),
+/* harmony export */   "swing": () => (/* binding */ swing),
+/* harmony export */   "beforeDrop": () => (/* binding */ beforeDrop),
+/* harmony export */   "drop": () => (/* binding */ drop),
+/* harmony export */   "land": () => (/* binding */ land),
+/* harmony export */   "out": () => (/* binding */ out),
+/* harmony export */   "initialAngle": () => (/* binding */ initialAngle),
+/* harmony export */   "bgInitMovement": () => (/* binding */ bgInitMovement),
+/* harmony export */   "hookDownMovement": () => (/* binding */ hookDownMovement),
+/* harmony export */   "hookUpMovement": () => (/* binding */ hookUpMovement),
+/* harmony export */   "lightningMovement": () => (/* binding */ lightningMovement),
+/* harmony export */   "tutorialMovement": () => (/* binding */ tutorialMovement),
+/* harmony export */   "moveDownMovement": () => (/* binding */ moveDownMovement)
+/* harmony export */ });
+const gameStartNow = 'GAME_START_NOW'
+const gameUserOption = 'GAME_USER_OPTION'
+const hardMode = 'HARD_MODE'
+
+const successCount = 'SUCCESS_COUNT'
+const failedCount = 'FAILED_COUNT'
+const perfectCount = 'PERFECT_COUNT'
+const gameScore = 'GAME_SCORE'
+
+const hookDown = 'HOOK_DOWN'
+const hookUp = 'HOOK_UP'
+const hookNormal = 'HOOK_NORMAL'
+
+const bgImgOffset = 'BACKGROUND_IMG_OFFSET_HEIGHT'
+const lineInitialOffset = 'LINE_INITIAL_OFFSET'
+const bgLinearGradientOffset = 'BACKGROUND_LINEAR_GRADIENT_OFFSET_HEIGHT'
+
+
+const blockCount = 'BLOCK_COUNT'
+const blockWidth = 'BLOCK_WIDTH'
+const blockHeight = 'BLOCK_HEIGHT'
+const cloudSize = 'CLOUD_SIZE'
+const ropeHeight = 'ROPE_HEIGHT'
+const flightCount = 'FLIGHT_COUNT'
+const flightLayer = 'FLIGHT_LAYER'
+
+const rotateRight = 'ROTATE_RIGHT'
+const rotateLeft = 'ROTATE_LEFT'
+const swing = 'SWING'
+const beforeDrop = 'BEFORE_DROP'
+const drop = 'DROP'
+const land = 'LAND'
+const out = 'OUT'
+
+const initialAngle = 'INITIAL_ANGLE'
+
+const bgInitMovement = 'BG_INIT_MOVEMENT'
+const hookDownMovement = 'HOOK_DOWN_MOVEMENT'
+const hookUpMovement = 'HOOK_UP_MOVEMENT'
+const lightningMovement = 'LIGHTNING_MOVEMENT'
+const tutorialMovement = 'TUTORIAL_MOVEMENT'
+const moveDownMovement = 'MOVE_DOWN_MOVEMENT'
+
+
+/***/ }),
+
+/***/ "./src/flight.js":
+/*!***********************!*\
+  !*** ./src/flight.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "flightAction": () => (/* binding */ flightAction),
+/* harmony export */   "flightPainter": () => (/* binding */ flightPainter),
+/* harmony export */   "addFlight": () => (/* binding */ addFlight)
+/* harmony export */ });
+/* harmony import */ var cooljs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cooljs */ "./node_modules/cooljs/index.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+const getActionConfig = (engine, type) => {
+  const {
+    width, height, utils
+  } = engine
+  const { random } = utils
+  const size = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.cloudSize)
+  const actionTypes = {
+    bottomToTop: {
+      x: width * random(0.3, 0.7),
+      y: height,
+      vx: 0,
+      vy: engine.pixelsPerFrame(height) * 0.7 * -1
+    },
+    leftToRight: {
+      x: size * -1,
+      y: height * random(0.3, 0.6),
+      vx: engine.pixelsPerFrame(width) * 0.4,
+      vy: engine.pixelsPerFrame(height) * 0.1 * -1
+    },
+    rightToLeft: {
+      x: width,
+      y: height * random(0.2, 0.5),
+      vx: engine.pixelsPerFrame(width) * 0.4 * -1,
+      vy: engine.pixelsPerFrame(height) * 0.1
+    },
+    rightTopToLeft: {
+      x: width,
+      y: 0,
+      vx: engine.pixelsPerFrame(width) * 0.6 * -1,
+      vy: engine.pixelsPerFrame(height) * 0.5
+    }
+  }
+  return actionTypes[type]
+}
+
+
+const flightAction = (instance, engine) => {
+  const { visible, ready, type } = instance
+  if (!visible) return
+  const size = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.cloudSize)
+  if (!ready) {
+    const action = getActionConfig(engine, type)
+    instance.ready = true
+    instance.width = size
+    instance.height = size
+    instance.x = action.x
+    instance.y = action.y
+    instance.vx = action.vx
+    instance.vy = action.vy
+  }
+  instance.x += instance.vx
+  instance.y += instance.vy
+  if (instance.y + size < 0
+    || instance.y > engine.height
+    || instance.x + size < 0
+    || instance.x > engine.width) {
+    instance.visible = false
+  }
+}
+
+const flightPainter = (instance, engine) => {
+  const { ctx } = engine
+  const flight = engine.getImg(instance.imgName)
+  ctx.drawImage(flight, instance.x, instance.y, instance.width, instance.height)
+}
+
+const addFlight = (engine, number, type) => {
+  const flightCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.flightCount)
+  if (flightCount === number) return
+  const flight = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Instance({
+    name: `flight_${number}`,
+    action: flightAction,
+    painter: flightPainter
+  })
+  flight.imgName = `f${number}`
+  flight.type = type
+  engine.addInstance(flight, _constant__WEBPACK_IMPORTED_MODULE_1__.flightLayer)
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.flightCount, number)
+}
+
+
+/***/ }),
+
+/***/ "./src/hook.js":
+/*!*********************!*\
+  !*** ./src/hook.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "hookAction": () => (/* binding */ hookAction),
+/* harmony export */   "hookPainter": () => (/* binding */ hookPainter)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+const hookAction = (instance, engine, time) => {
+  const ropeHeight = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.ropeHeight)
+  if (!instance.ready) {
+    instance.x = engine.width / 2
+    instance.y = ropeHeight * -1.5
+    instance.ready = true
+  }
+  engine.getTimeMovement(
+    _constant__WEBPACK_IMPORTED_MODULE_1__.hookUpMovement,
+    [[instance.y, instance.y - ropeHeight]],
+    (value) => {
+      instance.y = value
+    },
+    {
+      after: () => {
+        instance.y = ropeHeight * -1.5
+      }
+    }
+  )
+  engine.getTimeMovement(
+    _constant__WEBPACK_IMPORTED_MODULE_1__.hookDownMovement,
+    [[instance.y, instance.y + ropeHeight]],
+    (value) => {
+      instance.y = value
+    },
+    {
+      name: 'hook'
+    }
+  )
+  const initialAngle = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.initialAngle)
+  instance.angle = initialAngle *
+    (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getSwingBlockVelocity)(engine, time)
+  instance.weightX = instance.x +
+    (Math.sin(instance.angle) * ropeHeight)
+  instance.weightY = instance.y +
+    (Math.cos(instance.angle) * ropeHeight)
+}
+
+const hookPainter = (instance, engine) => {
+  const { ctx } = engine
+  const ropeHeight = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.ropeHeight)
+  const ropeWidth = ropeHeight * 0.1
+  const hook = engine.getImg('hook')
+  ctx.save()
+  ctx.translate(instance.x, instance.y)
+  ctx.rotate((Math.PI * 2) - instance.angle)
+  ctx.translate(-instance.x, -instance.y)
+  engine.ctx.drawImage(hook, instance.x - (ropeWidth / 2), instance.y, ropeWidth, ropeHeight + 5)
+  ctx.restore()
+}
+
+
+
+/***/ }),
+
+/***/ "./src/line.js":
+/*!*********************!*\
+  !*** ./src/line.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "lineAction": () => (/* binding */ lineAction),
+/* harmony export */   "linePainter": () => (/* binding */ linePainter)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+const lineAction = (instance, engine, time) => {
+  const i = instance
+  if (!i.ready) {
+    i.y = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.lineInitialOffset)
+    i.ready = true
+    i.collisionX = engine.width - engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_1__.blockWidth)
+  }
+  engine.getTimeMovement(
+    _constant__WEBPACK_IMPORTED_MODULE_1__.moveDownMovement,
+    [[instance.y, instance.y + ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.getMoveDownValue)(engine, { pixelsPerFrame: s => s / 2 }))]],
+    (value) => {
+      instance.y = value
+    },
+    {
+      name: 'line'
+    }
+  )
+  const landBlockVelocity = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getLandBlockVelocity)(engine, time)
+  instance.x += landBlockVelocity
+  instance.collisionX += landBlockVelocity
+}
+
+const linePainter = (instance, engine) => {
+  const { ctx, debug } = engine
+  if (!debug) {
+    return
+  }
+  ctx.save()
+  ctx.beginPath()
+  ctx.strokeStyle = 'red'
+  ctx.moveTo(instance.x, instance.y)
+  ctx.lineTo(instance.collisionX, instance.y)
+  ctx.lineWidth = 1
+  ctx.stroke()
+  ctx.restore()
+}
+
+
+
+/***/ }),
+
+/***/ "./src/tutorial.js":
+/*!*************************!*\
+  !*** ./src/tutorial.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "tutorialAction": () => (/* binding */ tutorialAction),
+/* harmony export */   "tutorialPainter": () => (/* binding */ tutorialPainter)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+
+const tutorialAction = (instance, engine, time) => {
+  const { width, height } = engine
+  const { name } = instance
+  if (!instance.ready) {
+    instance.ready = true
+    const tutorialWidth = width * 0.2
+    instance.updateWidth(tutorialWidth)
+    instance.height = tutorialWidth * 0.46
+    instance.x = engine.calWidth - instance.calWidth
+    instance.y = height * 0.45
+    if (name !== 'tutorial') {
+      instance.y += instance.height * 1.2
+    }
+  }
+  if (name !== 'tutorial') {
+    instance.y += Math.cos(time / 200) * instance.height * 0.01
+  }
+}
+
+const tutorialPainter = (instance, engine) => {
+  if (engine.checkTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_1__.tutorialMovement)) {
+    return
+  }
+  if ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.getHookStatus)(engine) !== _constant__WEBPACK_IMPORTED_MODULE_1__.hookNormal) {
+    return
+  }
+  const { ctx } = engine
+  const { name } = instance
+  const t = engine.getImg(name)
+  ctx.drawImage(t, instance.x, instance.y, instance.width, instance.height)
+}
+
+
+
+/***/ }),
+
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "checkMoveDown": () => (/* binding */ checkMoveDown),
+/* harmony export */   "getMoveDownValue": () => (/* binding */ getMoveDownValue),
+/* harmony export */   "getAngleBase": () => (/* binding */ getAngleBase),
+/* harmony export */   "getSwingBlockVelocity": () => (/* binding */ getSwingBlockVelocity),
+/* harmony export */   "getLandBlockVelocity": () => (/* binding */ getLandBlockVelocity),
+/* harmony export */   "getHookStatus": () => (/* binding */ getHookStatus),
+/* harmony export */   "touchEventHandler": () => (/* binding */ touchEventHandler),
+/* harmony export */   "addSuccessCount": () => (/* binding */ addSuccessCount),
+/* harmony export */   "addFailedCount": () => (/* binding */ addFailedCount),
+/* harmony export */   "addScore": () => (/* binding */ addScore),
+/* harmony export */   "drawYellowString": () => (/* binding */ drawYellowString)
+/* harmony export */ });
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+
+
+const checkMoveDown = engine =>
+  (engine.checkTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_0__.moveDownMovement))
+
+const getMoveDownValue = (engine, store) => {
+  const pixelsPerFrame = store ? store.pixelsPerFrame : engine.pixelsPerFrame.bind(engine)
+  const successCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.successCount)
+  const calHeight = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.blockHeight) * 2
+  if (successCount <= 4) {
+    return pixelsPerFrame(calHeight * 1.25)
+  }
+  return pixelsPerFrame(calHeight)
+}
+
+const getAngleBase = (engine) => {
+  const successCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.successCount)
+  const gameScore = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameScore)
+  const { hookAngle } = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameUserOption)
+  if (hookAngle) {
+    return hookAngle(successCount, gameScore)
+  }
+  if (engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.hardMode)) {
+    return 90
+  }
+  switch (true) {
+    case successCount < 10:
+      return 30
+    case successCount < 20:
+      return 60
+    default:
+      return 80
+  }
+}
+
+const getSwingBlockVelocity = (engine, time) => {
+  const successCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.successCount)
+  const gameScore = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameScore)
+  const { hookSpeed } = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameUserOption)
+  if (hookSpeed) {
+    return hookSpeed(successCount, gameScore)
+  }
+  let hard
+  switch (true) {
+    case successCount < 1:
+      hard = 0
+      break
+    case successCount < 10:
+      hard = 1
+      break
+    case successCount < 20:
+      hard = 0.8
+      break
+    case successCount < 30:
+      hard = 0.7
+      break
+    default:
+      hard = 0.74
+      break
+  }
+  if (engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.hardMode)) {
+    hard = 1.1
+  }
+  return Math.sin(time / (200 / hard))
+}
+
+const getLandBlockVelocity = (engine, time) => {
+  const successCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.successCount)
+  const gameScore = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameScore)
+  const { landBlockSpeed } = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameUserOption)
+  if (landBlockSpeed) {
+    return landBlockSpeed(successCount, gameScore)
+  }
+  const { width } = engine
+  let hard
+  switch (true) {
+    case successCount < 5:
+      hard = 0
+      break
+    case successCount < 13:
+      hard = 0.001
+      break
+    case successCount < 23:
+      hard = 0.002
+      break
+    default:
+      hard = 0.003
+      break
+  }
+  return Math.cos(time / 200) * hard * width
+}
+
+const getHookStatus = (engine) => {
+  if (engine.checkTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_0__.hookDownMovement)) {
+    return _constant__WEBPACK_IMPORTED_MODULE_0__.hookDown
+  }
+  if (engine.checkTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_0__.hookUpMovement)) {
+    return _constant__WEBPACK_IMPORTED_MODULE_0__.hookUp
+  }
+  return _constant__WEBPACK_IMPORTED_MODULE_0__.hookNormal
+}
+
+const touchEventHandler = (engine) => {
+  if (!engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameStartNow)) return
+  if (engine.debug && engine.paused) {
+    return
+  }
+  if (getHookStatus(engine) !== _constant__WEBPACK_IMPORTED_MODULE_0__.hookNormal) {
+    return
+  }
+  engine.removeInstance('tutorial')
+  engine.removeInstance('tutorial-arrow')
+  const b = engine.getInstance(`block_${engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.blockCount)}`)
+  if (b && b.status === _constant__WEBPACK_IMPORTED_MODULE_0__.swing) {
+    engine.setTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_0__.hookUpMovement, 500)
+    b.status = _constant__WEBPACK_IMPORTED_MODULE_0__.beforeDrop
+  }
+}
+
+const addSuccessCount = (engine) => {
+  const { setGameSuccess } = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameUserOption)
+  const lastSuccessCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.successCount)
+  const success = lastSuccessCount + 1
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.successCount, success)
+  if (engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.hardMode)) {
+    engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.ropeHeight, engine.height * engine.utils.random(0.35, 0.55))
+  }
+  if (setGameSuccess) setGameSuccess(success)
+}
+
+const addFailedCount = (engine) => {
+  const { setGameFailed } = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameUserOption)
+  const lastFailedCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.failedCount)
+  const failed = lastFailedCount + 1
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.failedCount, failed)
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.perfectCount, 0)
+  if (setGameFailed) setGameFailed(failed)
+  if (failed >= 3) {
+    engine.pauseAudio('bgm')
+    engine.playAudio('game-over')
+    engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameStartNow, false)
+  }
+}
+
+const addScore = (engine, isPerfect) => {
+  const { setGameScore, successScore, perfectScore } = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameUserOption)
+  const lastPerfectCount = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.perfectCount, 0)
+  const lastGameScore = engine.getVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameScore)
+  const perfect = isPerfect ? lastPerfectCount + 1 : 0
+  const score = lastGameScore + (successScore || 25) + ((perfectScore || 25) * perfect)
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.gameScore, score)
+  engine.setVariable(_constant__WEBPACK_IMPORTED_MODULE_0__.perfectCount, perfect)
+  if (setGameScore) setGameScore(score)
+}
+
+const drawYellowString = (engine, option) => {
+  const {
+    string, size, x, y, textAlign
+  } = option
+  const { ctx } = engine
+  const fontName = 'wenxue'
+  const fontSize = size
+  const lineSize = fontSize * 0.1
+  ctx.save()
+  ctx.beginPath()
+  const gradient = ctx.createLinearGradient(0, 0, 0, y)
+  gradient.addColorStop(0, '#FAD961')
+  gradient.addColorStop(1, '#F76B1C')
+  ctx.fillStyle = gradient
+  ctx.lineWidth = lineSize
+  ctx.strokeStyle = '#FFF'
+  ctx.textAlign = textAlign || 'center'
+  ctx.font = `${fontSize}px ${fontName}`
+  ctx.strokeText(string, x, y)
+  ctx.fillText(string, x, y)
+  ctx.restore()
+}
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var cooljs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cooljs */ "./node_modules/cooljs/index.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _background__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./background */ "./src/background.js");
+/* harmony import */ var _line__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./line */ "./src/line.js");
+/* harmony import */ var _cloud__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./cloud */ "./src/cloud.js");
+/* harmony import */ var _hook__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hook */ "./src/hook.js");
+/* harmony import */ var _tutorial__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./tutorial */ "./src/tutorial.js");
+/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./constant */ "./src/constant.js");
+/* harmony import */ var _animateFuncs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./animateFuncs */ "./src/animateFuncs.js");
+
+
+
+
+
+
+
+
+
+
+window.TowerGame = (option = {}) => {
+  const { width, height, canvasId, soundOn } = option;
+  const game = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Engine({
+    canvasId,
+    highResolution: true,
+    width,
+    height,
+    soundOn,
+    debug: true,
+  });
+  const pathGenerator = path => `./assets/${path}`;
+
+  game.addImg('background', pathGenerator('background.png'));
+  game.addImg('hook', pathGenerator('hook.png'));
+  game.addImg('blockRope', pathGenerator('block-rope.png'));
+  game.addImg('block', pathGenerator('block.png'));
+  game.addImg('block-perfect', pathGenerator('block-perfect.png'));
+  for (let i = 1; i <= 8; i += 1) {
+    game.addImg(`c${i}`, pathGenerator(`c${i}.png`));
+  }
+  game.addLayer(_constant__WEBPACK_IMPORTED_MODULE_7__.flightLayer);
+  for (let i = 1; i <= 7; i += 1) {
+    game.addImg(`f${i}`, pathGenerator(`f${i}.png`));
+  }
+  game.swapLayer(0, 1);
+  game.addImg('tutorial', pathGenerator('tutorial.png'));
+  game.addImg('tutorial-arrow', pathGenerator('tutorial-arrow.png'));
+  game.addImg('heart', pathGenerator('heart.png'));
+  game.addImg('score', pathGenerator('score.png'));
+  game.addAudio('drop-perfect', pathGenerator('drop-perfect.mp3'));
+  game.addAudio('drop', pathGenerator('drop.mp3'));
+  game.addAudio('game-over', pathGenerator('game-over.mp3'));
+  game.addAudio('rotate', pathGenerator('rotate.mp3'));
+  game.addAudio('bgm', pathGenerator('bgm.mp3'));
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.blockWidth, game.width * 0.25);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.blockHeight, game.getVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.blockWidth) * 0.71);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.cloudSize, game.width * 0.3);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.ropeHeight, game.height * 0.4);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.blockCount, 0);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.successCount, 0);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.failedCount, 0);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.gameScore, 0);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.hardMode, false);
+  game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.gameUserOption, option);
+  for (let i = 1; i <= 4; i += 1) {
+    const cloud = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Instance({
+      name: `cloud_${i}`,
+      action: _cloud__WEBPACK_IMPORTED_MODULE_4__.cloudAction,
+      painter: _cloud__WEBPACK_IMPORTED_MODULE_4__.cloudPainter,
+    });
+    cloud.index = i;
+    cloud.count = 5 - i;
+    game.addInstance(cloud);
+  }
+  const line = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Instance({
+    name: 'line',
+    action: _line__WEBPACK_IMPORTED_MODULE_3__.lineAction,
+    painter: _line__WEBPACK_IMPORTED_MODULE_3__.linePainter,
+  });
+  game.addInstance(line);
+  const hook = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Instance({
+    name: 'hook',
+    action: _hook__WEBPACK_IMPORTED_MODULE_5__.hookAction,
+    painter: _hook__WEBPACK_IMPORTED_MODULE_5__.hookPainter,
+  });
+  game.addInstance(hook);
+
+  game.startAnimate = _animateFuncs__WEBPACK_IMPORTED_MODULE_8__.startAnimate;
+  game.endAnimate = _animateFuncs__WEBPACK_IMPORTED_MODULE_8__.endAnimate;
+  game.paintUnderInstance = _background__WEBPACK_IMPORTED_MODULE_2__.background;
+  game.addKeyDownListener('enter', () => {
+    if (game.debug) game.togglePaused();
+  });
+  game.touchStartListener = () => {
+    (0,_utils__WEBPACK_IMPORTED_MODULE_1__.touchEventHandler)(game);
+  };
+
+  game.playBgm = () => {
+    game.playAudio('bgm', true);
+  };
+
+  game.pauseBgm = () => {
+    game.pauseAudio('bgm');
+  };
+
+  game.start = () => {
+    const tutorial = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Instance({
+      name: 'tutorial',
+      action: _tutorial__WEBPACK_IMPORTED_MODULE_6__.tutorialAction,
+      painter: _tutorial__WEBPACK_IMPORTED_MODULE_6__.tutorialPainter,
+    });
+    game.addInstance(tutorial);
+    const tutorialArrow = new cooljs__WEBPACK_IMPORTED_MODULE_0__.Instance({
+      name: 'tutorial-arrow',
+      action: _tutorial__WEBPACK_IMPORTED_MODULE_6__.tutorialAction,
+      painter: _tutorial__WEBPACK_IMPORTED_MODULE_6__.tutorialPainter,
+    });
+    game.addInstance(tutorialArrow);
+    game.setTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_7__.bgInitMovement, 500);
+    game.setTimeMovement(_constant__WEBPACK_IMPORTED_MODULE_7__.tutorialMovement, 500);
+    game.setVariable(_constant__WEBPACK_IMPORTED_MODULE_7__.gameStartNow, true);
+  };
+
+  return game;
+};
+
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=main.js.map
